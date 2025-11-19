@@ -5,12 +5,11 @@ body {
   background-color: #f4f4f9;
 }
 
-/* Navbar Styling */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #20232a; /* Dark React-like color */
+  background-color: #20232a;
   padding: 1rem 2rem;
   color: white;
 }
@@ -18,7 +17,7 @@ body {
 .navbar-brand {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #61dafb; /* React Blue */
+  color: #61dafb;
   text-decoration: none;
 }
 
@@ -38,7 +37,6 @@ body {
   background-color: #4fa8c7;
 }
 
-/* Page Layout */
 .page-container {
   display: flex;
   flex-direction: column;

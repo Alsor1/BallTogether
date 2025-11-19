@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 👈 Import this for redirection
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 const LoginPage: React.FC = () => {
@@ -10,7 +10,7 @@ const LoginPage: React.FC = () => {
     password: ''
   });
 
-  const navigate = useNavigate(); // 👈 Initialize hook
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,11 +48,11 @@ const LoginPage: React.FC = () => {
         } else {
           // --- REGISTER SUCCESS ---
           alert("Registration Successful! Please Login.");
-          setIsLoginMode(true); // Switch to login form
+          setIsLoginMode(true); 
         }
       } else {
         // --- FAILURE ---
-        const errorMsg = await response.text(); // Get backend error message
+        const errorMsg = await response.text();
         alert("Error: " + errorMsg);
       }
     } catch (error) {
@@ -67,7 +67,6 @@ const LoginPage: React.FC = () => {
         <h2>{isLoginMode ? 'Player Login' : 'Create Account'}</h2>
         <form onSubmit={handleSubmit}>
           
-          {/* Username */}
           <input 
             type="text" 
             name="username"
@@ -78,7 +77,6 @@ const LoginPage: React.FC = () => {
             required 
           />
 
-          {/* Email - Only for Register */}
           {!isLoginMode && (
             <input 
               type="email" 
@@ -91,7 +89,6 @@ const LoginPage: React.FC = () => {
             />
           )}
 
-          {/* Password */}
           <input 
             type="password" 
             name="password"
