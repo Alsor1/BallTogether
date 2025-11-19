@@ -5,6 +5,7 @@ import com.balltogether.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,12 +18,12 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    
-@PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody Users user) {
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody Users users) {
         try {
-            userService.registerUser(user);
-            return ResponseEntity.ok("User registered successfully");
+            userService.registerUser(users);
+            return ResponseEntity.ok("Users registered successfully");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -32,13 +33,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody Users loginRequest) {
-        Users users = userService.loginUser(loginRequest.getUsername(), loginRequest.getPassword());
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginRequest) {
+        String email = loginRequest.get("email");
+        String password = loginRequest.get("password");
+
+        Users users = userService.loginUser(email, password);
         
         if (users != null) {
             return ResponseEntity.ok("Login successful");
         } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
+            return ResponseEntity.status(401).body("Invalid email or password");
         }
     }
 }

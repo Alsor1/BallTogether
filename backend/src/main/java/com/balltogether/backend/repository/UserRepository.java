@@ -12,24 +12,17 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
-    @Query(value = "SELECT * FROM users WHERE username = :username", nativeQuery = true)
-    Optional<Users> findByUsernameNative(String username);
 
     @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
-    Optional<Users> findByEmailNative(String email);
-
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)", nativeQuery = true)
-    void insertUserNative(String username, String password, String email, String role);
+    Optional<Users> findByEmailNative(@Param("email") String email);
 
     @Query(value = "SELECT COUNT(*) FROM users WHERE email = :email", nativeQuery = true)
     int countEmailUsage(@Param("email") String email);
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)", nativeQuery = true)
-    void saveUserNative(@Param("username") String username,
+    @Query(value = "INSERT INTO users (full_name, email, password_hash, role) VALUES (:fullName, :email, :password, :role)", nativeQuery = true)
+    void saveUserNative(@Param("fullName") String fullName,
                         @Param("email") String email,
                         @Param("password") String password,
                         @Param("role") String role);

@@ -5,7 +5,7 @@ import './App.css';
 const LoginPage: React.FC = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [formData, setFormData] = useState({
-    username: '',
+    fullName: '',
     email: '',
     password: ''
   });
@@ -27,31 +27,28 @@ const LoginPage: React.FC = () => {
       ? 'http://localhost:8080/api/users/login' 
       : 'http://localhost:8080/api/users/register';
 
+    const payload = isLoginMode 
+      ? { email: formData.email, password: formData.password }
+      : { fullName: formData.fullName, email: formData.email, password: formData.password };
+
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         if (isLoginMode) {
-          // --- LOGIN SUCCESS ---
           const successMsg = await response.text();
-          console.log(successMsg); // "Login successful"
-          
-          // Save username to LocalStorage so we remember who is logged in
-          localStorage.setItem('user', formData.username);
-          
-          // Redirect to the main app/dashboard
+          console.log(successMsg);
+          localStorage.setItem('user', formData.email); 
           navigate('/dashboard'); 
         } else {
-          // --- REGISTER SUCCESS ---
           alert("Registration Successful! Please Login.");
-          setIsLoginMode(true); 
+          setIsLoginMode(true);
         }
       } else {
-        // --- FAILURE ---
         const errorMsg = await response.text();
         alert("Error: " + errorMsg);
       }
@@ -67,28 +64,29 @@ const LoginPage: React.FC = () => {
         <h2>{isLoginMode ? 'Player Login' : 'Create Account'}</h2>
         <form onSubmit={handleSubmit}>
           
-          <input 
-            type="text" 
-            name="username"
-            placeholder="Username"
-            autoComplete="username"
-            value={formData.username}
-            onChange={handleChange}
-            required 
-          />
-
           {!isLoginMode && (
             <input 
-              type="email" 
-              name="email"
-              placeholder="Email Address"
-              autoComplete="email"
-              value={formData.email}
+              type="text" 
+              name="fullName" 
+              placeholder="Full Name"
+              autoComplete="name"
+              value={formData.fullName}
               onChange={handleChange}
               required 
             />
           )}
 
+          <input 
+            type="email" 
+            name="email"
+            placeholder="Email Address"
+            autoComplete="email"
+            value={formData.email}
+            onChange={handleChange}
+            required 
+          />
+
+          {/* Password */}
           <input 
             type="password" 
             name="password"

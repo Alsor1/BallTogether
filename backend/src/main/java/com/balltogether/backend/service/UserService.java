@@ -18,34 +18,29 @@ public class UserService {
     }
 
     public void registerUser(Users user) {
-        int count = userRepository.countEmailUsage(user.getEmail());
-        if (count > 0) {
+        if (userRepository.countEmailUsage(user.getEmail()) > 0) {
             throw new IllegalStateException("Email is already taken");
         }
-
         if (user.getRole() == null) {
             user.setRole("USER");
         }
-
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        String hashed = passwordEncoder.encode(user.getPassword());
         userRepository.saveUserNative(
-            user.getUsername(),
+            user.getFullName(),
             user.getEmail(),
-            hashedPassword,
+            hashed,
             user.getRole()
         );
     }
 
-    public Users loginUser(String username, String password) {
-        Optional<Users> userOptional = userRepository.findByUsernameNative(username);
-
-        if (userOptional.isPresent()) {
-            Users user = userOptional.get();
+    public Users loginUser(String email, String password) {
+        Optional<Users> userOpt = userRepository.findByEmailNative(email);
+        if (userOpt.isPresent()) {
+            Users user = userOpt.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
                 return user;
             }
         }
-        
         return null;
     }
 }
