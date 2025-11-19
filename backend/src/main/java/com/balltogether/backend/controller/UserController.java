@@ -17,19 +17,16 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-    // Registration Endpoint
+    
 @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody Users user) {
         try {
-            Users savedUser = userService.registerUser(user);
+            userService.registerUser(user);
             return ResponseEntity.ok("User registered successfully");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            // 👇 ADD THIS LINE TO SEE THE ERROR IN THE TERMINAL
-            e.printStackTrace(); 
-            // 👇 Update this to send the error message to the frontend for now
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }

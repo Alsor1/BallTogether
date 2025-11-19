@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // 👈 Import this for redirection
 import './App.css';
 
 const LoginPage: React.FC = () => {
-  // 1. State to toggle between Login and Register
   const [isLoginMode, setIsLoginMode] = useState(true);
-
-  // 2. State to hold form data
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: ''
   });
 
-  // 3. Handle input changes
+  const navigate = useNavigate(); // 👈 Initialize hook
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -21,128 +20,100 @@ const LoginPage: React.FC = () => {
     }));
   };
 
-  // 4. Handle Form Submission
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault(); // Prevent page reload
-  
-      if (isLoginMode) {
-        // --- LOGIN LOGIC ---
-        try {
-          const response = await fetch('http://localhost:8080/api/users/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              username: formData.username, 
-              password: formData.password 
-            }),
-          });
-  
-          if (response.ok) {
-            alert("Login Successful! Welcome back.");
-            // Redirect logic usually goes here (e.g., navigate('/dashboard'))
-          } else {
-            alert("Login Failed: Invalid credentials");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("Could not connect to server.");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const endpoint = isLoginMode 
+      ? 'http://localhost:8080/api/users/login' 
+      : 'http://localhost:8080/api/users/register';
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        if (isLoginMode) {
+          // --- LOGIN SUCCESS ---
+          const successMsg = await response.text();
+          console.log(successMsg); // "Login successful"
+          
+          // Save username to LocalStorage so we remember who is logged in
+          localStorage.setItem('user', formData.username);
+          
+          // Redirect to the main app/dashboard
+          navigate('/dashboard'); 
+        } else {
+          // --- REGISTER SUCCESS ---
+          alert("Registration Successful! Please Login.");
+          setIsLoginMode(true); // Switch to login form
         }
       } else {
-        // --- REGISTER LOGIC ---
-        try {
-          const response = await fetch('http://localhost:8080/api/users/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-          });
-  
-          if (response.ok) {
-            alert("Registration Successful! Please Login.");
-            setIsLoginMode(true); // Switch back to login mode
-          } else {
-            const errorMsg = await response.text();
-            alert("Registration Failed: " + errorMsg);
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("Could not connect to server.");
-        }
+        // --- FAILURE ---
+        const errorMsg = await response.text(); // Get backend error message
+        alert("Error: " + errorMsg);
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Could not connect to server.");
+    }
+  };
 
   return (
     <div className="page-container">
       <div className="form-box">
         <h2>{isLoginMode ? 'Player Login' : 'Create Account'}</h2>
-        
         <form onSubmit={handleSubmit}>
           
-          {/* Username - Always visible */}
+          {/* Username */}
           <input 
             type="text" 
             name="username"
-            placeholder="Username" 
+            placeholder="Username"
             autoComplete="username"
             value={formData.username}
             onChange={handleChange}
             required 
           />
 
-          {/* Email - Only visible in Register Mode */}
+          {/* Email - Only for Register */}
           {!isLoginMode && (
             <input 
               type="email" 
               name="email"
-              placeholder="Email Address" 
+              placeholder="Email Address"
+              autoComplete="email"
               value={formData.email}
               onChange={handleChange}
               required 
             />
           )}
 
-          {/* Password - Always visible */}
+          {/* Password */}
           <input 
             type="password" 
             name="password"
-            placeholder="Password" 
+            placeholder="Password"
+            autoComplete="current-password"
             value={formData.password}
             onChange={handleChange}
             required 
           />
 
-          {/* Submit Button */}
           <button type="submit" className="login-btn" style={{ width: '100%', marginTop: '10px' }}>
             {isLoginMode ? 'Sign In' : 'Sign Up'}
           </button>
         </form>
 
-        {/* Toggle Link */}
         <div style={{ marginTop: '15px', fontSize: '0.9rem' }}>
           {isLoginMode ? (
-            <span>
-              New to the court?{' '}
-              <span 
-                onClick={() => setIsLoginMode(false)} 
-                style={{ color: '#007bff', cursor: 'pointer', fontWeight: 'bold' }}>
-                Register here
-              </span>
-            </span>
+            <span>New to the court? <span onClick={() => setIsLoginMode(false)} style={{ color: '#61dafb', cursor: 'pointer', fontWeight: 'bold' }}>Register here</span></span>
           ) : (
-            <span>
-              Already have a squad?{' '}
-              <span 
-                onClick={() => setIsLoginMode(true)} 
-                style={{ color: '#007bff', cursor: 'pointer', fontWeight: 'bold' }}>
-                Login here
-              </span>
-            </span>
+            <span>Already have a squad? <span onClick={() => setIsLoginMode(true)} style={{ color: '#61dafb', cursor: 'pointer', fontWeight: 'bold' }}>Login here</span></span>
           )}
         </div>
-
       </div>
     </div>
   );

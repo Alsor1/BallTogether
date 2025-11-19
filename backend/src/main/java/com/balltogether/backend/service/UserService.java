@@ -2,7 +2,7 @@ package com.balltogether.backend.service;
 
 import com.balltogether.backend.entity.Users;
 import com.balltogether.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -10,36 +10,42 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public Users registerUser(Users users) {
-        if (userRepository.existsByEmail(users.getEmail())) {
+    public void registerUser(Users user) {
+        int count = userRepository.countEmailUsage(user.getEmail());
+        if (count > 0) {
             throw new IllegalStateException("Email is already taken");
         }
 
-        if(users.getRole() == null || users.getRole().isEmpty()) {
-            users.setRole("USER"); // Default role
+        if (user.getRole() == null) {
+            user.setRole("USER");
         }
-        return userRepository.save(users);
+
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        userRepository.saveUserNative(
+            user.getUsername(),
+            user.getEmail(),
+            hashedPassword,
+            user.getRole()
+        );
     }
 
-    // 👇 Add this method for Login logic
     public Users loginUser(String username, String password) {
-        // 1. Find users by username
-        Optional<Users> userOptional = userRepository.findByUsername(username);
+        Optional<Users> userOptional = userRepository.findByUsernameNative(username);
 
-        // 2. Check if users exists AND password matches
         if (userOptional.isPresent()) {
-            Users users = userOptional.get();
-            if (users.getPassword().equals(password)) {
-                return users; // Login success
+            Users user = userOptional.get();
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return user;
             }
         }
         
-        return null; // Login failed
+        return null;
     }
 }
