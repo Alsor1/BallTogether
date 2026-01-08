@@ -1,0 +1,103 @@
+/** LoginPage.css
+ * @author [Your Name]
+ * @version 10 Decembrie 2025
+ */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  background-color: #f9fbfb;
+  padding: 20px;
+}
+
+.auth-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.auth-header h2 {
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.auth-form {
+  text-align: left;
+}
+
+.auth-input-group {
+  margin-bottom: 1.2rem;
+}
+
+.auth-input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.auth-input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #00a878;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s;
+}
+
+.auth-btn:hover {
+  background-color: #008f66;
+}
+
+.auth-error-msg {
+  background-color: #fff2f2;
+  color: #d32f2f;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  text-align: center;
+  border: 1px solid #ffcdd2;
+}
+
+.auth-footer {
+  margin-top: 2rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.auth-toggle-btn {
+  background: none;
+  border: none;
+  color: #00a878;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+  text-decoration: underline;
+}

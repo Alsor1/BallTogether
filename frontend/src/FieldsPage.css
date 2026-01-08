@@ -1,0 +1,82 @@
+/** FieldsPage.css 
+ * @author [Your Name]
+ * @version 10 Decembrie 2025
+ */
+.fields-container {
+  padding: 2rem 10%;
+  background-color: #f9fbfb;
+}
+
+.fields-header h1 {
+  font-size: 2.5rem;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  gap: 20px;
+}
+
+.search-input {
+  flex: 1;
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input input {
+  border: none;
+  width: 100%;
+  margin-left: 10px;
+  outline: none;
+}
+
+.filter-tags {
+  display: flex;
+  gap: 10px;
+}
+
+.tag {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.tag.active {
+  background-color: #00a878;
+  color: white;
+  border-color: #00a878;
+}
+
+.map-section {
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 1.5rem;
+}
+
+/* Reusing Card Styles from LandingPage but scoped here */
+.card-img-placeholder {
+  height: 200px;
+  background-color: #e0e0e0;
+  position: relative;
+}

@@ -1,113 +1,132 @@
+/** Clasa pentru gestionarea autentificarii si inregistrarii utilizatorilor
+ * @author [Your Name]
+ * @version 10 Decembrie 2025
+ */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './App.css';
+import './LoginPage.css';
 
 const LoginPage: React.FC = () => {
-  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
-
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(''); // Clear error when user types
+  };
+
+  const validateForm = () => {
+    if (!formData.email.includes('@')) return "Please enter a valid email address.";
+    if (formData.password.length < 6) return "Password must be at least 6 characters.";
+    if (!isLogin && formData.password !== formData.confirmPassword) return "Passwords do not match.";
+    if (!isLogin && !formData.fullName) return "Full name is required for registration.";
+    return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
-    const endpoint = isLoginMode 
-      ? 'http://localhost:8080/api/users/login' 
-      : 'http://localhost:8080/api/users/register';
-
-    const payload = isLoginMode 
+    const endpoint = isLogin ? '/api/users/login' : '/api/users/register';
+    const payload = isLogin 
       ? { email: formData.email, password: formData.password }
       : { fullName: formData.fullName, email: formData.email, password: formData.password };
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(`http://localhost:8080${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        if (isLoginMode) {
-          const successMsg = await response.text();
-          console.log(successMsg);
-          localStorage.setItem('user', formData.email); 
-          navigate('/dashboard'); 
+        if (isLogin) {
+          localStorage.setItem('user', formData.email);
+          navigate('/dashboard');
         } else {
-          alert("Registration Successful! Please Login.");
-          setIsLoginMode(true);
+          alert("Registration successful! Please log in.");
+          setIsLogin(true);
         }
       } else {
-        const errorMsg = await response.text();
-        alert("Error: " + errorMsg);
+        const msg = await response.text();
+        setError(msg || "Authentication failed.");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Could not connect to server.");
+    } catch (err) {
+      setError("Could not connect to the server.");
     }
   };
 
   return (
-    <div className="page-container">
-      <div className="form-box">
-        <h2>{isLoginMode ? 'Player Login' : 'Create Account'}</h2>
-        <form onSubmit={handleSubmit}>
-          
-          {!isLoginMode && (
-            <input 
-              type="text" 
-              name="fullName" 
-              placeholder="Full Name"
-              autoComplete="name"
-              value={formData.fullName}
-              onChange={handleChange}
-              required 
-            />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+          <p>{isLogin ? 'Enter your details to get back on the court' : 'Join the community and start playing'}</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          {error && <div className="auth-error-msg">{error}</div>}
+
+          {!isLogin && (
+            <div className="auth-input-group">
+              <label>Full Name</label>
+              <input 
+                type="text" name="fullName" placeholder="John Doe"
+                value={formData.fullName} onChange={handleInputChange} 
+              />
+            </div>
           )}
 
-          <input 
-            type="email" 
-            name="email"
-            placeholder="Email Address"
-            autoComplete="email"
-            value={formData.email}
-            onChange={handleChange}
-            required 
-          />
+          <div className="auth-input-group">
+            <label>Email Address</label>
+            <input 
+              type="email" name="email" placeholder="email@example.com"
+              value={formData.email} onChange={handleInputChange} required
+            />
+          </div>
 
-          {/* Password */}
-          <input 
-            type="password" 
-            name="password"
-            placeholder="Password"
-            autoComplete="current-password"
-            value={formData.password}
-            onChange={handleChange}
-            required 
-          />
+          <div className="auth-input-group">
+            <label>Password</label>
+            <input 
+              type="password" name="password" placeholder="••••••••"
+              value={formData.password} onChange={handleInputChange} required
+            />
+          </div>
 
-          <button type="submit" className="login-btn" style={{ width: '100%', marginTop: '10px' }}>
-            {isLoginMode ? 'Sign In' : 'Sign Up'}
+          {!isLogin && (
+            <div className="auth-input-group">
+              <label>Confirm Password</label>
+              <input 
+                type="password" name="confirmPassword" placeholder="••••••••"
+                value={formData.confirmPassword} onChange={handleInputChange} required
+              />
+            </div>
+          )}
+
+          <button type="submit" className="auth-btn">
+            {isLogin ? 'Sign In' : 'Sign Up'}
           </button>
         </form>
 
-        <div style={{ marginTop: '15px', fontSize: '0.9rem' }}>
-          {isLoginMode ? (
-            <span>New to the court? <span onClick={() => setIsLoginMode(false)} style={{ color: '#61dafb', cursor: 'pointer', fontWeight: 'bold' }}>Register here</span></span>
-          ) : (
-            <span>Already have a squad? <span onClick={() => setIsLoginMode(true)} style={{ color: '#61dafb', cursor: 'pointer', fontWeight: 'bold' }}>Login here</span></span>
-          )}
+        <div className="auth-footer">
+          <p>
+            {isLogin ? "Don't have an account?" : "Already have an account?"}
+            <button className="auth-toggle-btn" onClick={() => setIsLogin(!isLogin)}>
+              {isLogin ? 'Register here' : 'Login here'}
+            </button>
+          </p>
         </div>
       </div>
     </div>

@@ -1,0 +1,78 @@
+/** LandingPage.css 
+ * @author [Your Name]
+ * @version 10 Decembrie 2025
+ */
+:root {
+  --primary: #00a878;
+  --primary-hover: #008f66;
+  --dark: #1a1a1a;
+  --light-bg: #f9fbfb;
+  --white: #ffffff;
+}
+
+/* Hero & General Sections */
+.hero-section {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=2000');
+  background-size: cover;
+  background-position: center;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  padding: 0 10%;
+  color: var(--white);
+}
+
+.hero-content h1 { font-size: 3.5rem; margin-bottom: 1rem; }
+.hero-content .highlight { color: var(--primary); }
+.hero-btns { display: flex; gap: 15px; margin-top: 2rem; }
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover { background-color: var(--primary-hover); }
+
+/* Stats Bar */
+.stats-bar {
+  background-color: var(--primary);
+  display: flex;
+  justify-content: space-around;
+  padding: 2.5rem;
+  color: white;
+  font-size: 1.1rem;
+}
+
+/* Steps Section */
+.how-it-works { padding: 5rem 10%; text-align: center; }
+.steps-container { display: flex; justify-content: space-between; margin-top: 4rem; gap: 20px; }
+.step { flex: 1; }
+.step-icon { font-size: 2.5rem; margin-bottom: 1.5rem; }
+
+/* Popular Fields Grid */
+.popular-fields { padding: 5rem 10%; background-color: var(--light-bg); }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+.fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+.field-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.card-img { height: 220px; position: relative; }
+.badge { position: absolute; top: 15px; left: 15px; background: var(--primary); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+.card-info { padding: 25px; text-align: left; }
+.card-footer-info { display: flex; justify-content: space-between; margin-top: 15px; color: #555; font-weight: 500; }
+.book-btn { width: 100%; background-color: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 20px; font-weight: bold; cursor: pointer; }
+
+/* CTA Section */
+.cta-section {
+  padding: 6rem 10%;
+  text-align: center;
+  background-color: #e6f6f2;
+}
+
+.cta-section h3 { font-size: 2.5rem; color: var(--dark); margin-bottom: 1rem; }
+.cta-section p { max-width: 600px; margin: 0 auto 2rem; color: #555; line-height: 1.6; }

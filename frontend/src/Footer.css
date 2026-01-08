@@ -1,0 +1,51 @@
+/** Footer.css 
+ * @author [Your Name]
+ * @version 10 Decembrie 2025
+ */
+.main-footer {
+  background: #444444;
+  color: #ffffff;
+  padding: 4rem 10% 2rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.footer-brand-section {
+  max-width: 300px;
+}
+
+.footer-brand-section p {
+  color: #bbb;
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+.footer-links-grid {
+  display: flex;
+  gap: 60px;
+}
+
+.footer-col h4 {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.footer-col a, .footer-col p {
+  display: block;
+  color: #bbb;
+  text-decoration: none;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid #555;
+  padding-top: 2rem;
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+}
