@@ -1,33 +1,29 @@
-/** BookingPage.css
- * @author [Your Name]
- * @version 10 Decembrie 2025
- */
 .booking-container {
-  padding: 3rem 10%;
+  padding: 4rem 10%;
   background-color: #f9fbfb;
-  min-height: 80vh;
+  min-height: 100vh;
 }
 
 .booking-content {
   display: flex;
-  gap: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 50px;
+  margin-top: 2rem;
 }
 
-/* --- Left Side - Form Styling --- */
+/* Form Section */
 .booking-form-section {
   flex: 2;
-  background: white;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 .booking-form-section h1 {
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
   color: #1a1a1a;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 2rem;
 }
 
 .form-group {
@@ -41,120 +37,101 @@
   color: #333;
 }
 
-.form-input, .date-picker-input {
+.input-field {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
-  box-sizing: border-box;
-  font-family: inherit;
 }
 
-/* Time Slots Grid */
-.time-slots-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 10px;
+.form-row {
+  display: flex;
+  gap: 20px;
 }
 
-.time-slot-btn {
-  padding: 10px;
-  border: 1px solid #ddd;
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Summary Card (Dreapta) */
+.booking-summary {
+  flex: 1;
+}
+
+.summary-card {
   background: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+  position: sticky;
+  top: 100px;
 }
 
-.time-slot-btn:hover {
-  border-color: #00a878;
-  background-color: #f0fcf9;
+.summary-image {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
 }
 
-.time-slot-btn.active {
-  background-color: #00a878;
-  color: white;
-  border-color: #00a878;
+.summary-details {
+  padding: 25px;
 }
 
-/* Referees Section & Toggle Switch */
-.referees-section {
+.summary-details h3 {
+  margin: 0 0 10px 0;
+  color: #1a1a1a;
+}
+
+.summary-address {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 15px 0;
+}
+
+.price-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 0;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 12px;
+  color: #555;
 }
 
-.referee-toggle-label span {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.referee-toggle-label p { color: #666; font-size: 0.9rem; margin: 5px 0 0 0; }
-
-/* The switch - the box around the slider */
-.switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-
-/* The slider */
-.slider {
-  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc; transition: .4s;
-}
-.slider:before {
-  position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
-  background-color: white; transition: .4s;
-}
-input:checked + .slider { background-color: #00a878; }
-input:checked + .slider:before { transform: translateX(24px); }
-.slider.round { border-radius: 34px; }
-.slider.round:before { border-radius: 50%; }
-
-/* Price Summary */
-.price-summary { margin: 2rem 0; }
-.price-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; color: #555; }
 .price-row.total {
-  font-weight: 700; color: #1a1a1a; font-size: 1.2rem;
-  border-top: 1px solid #eee; padding-top: 1rem; margin-top: 1rem;
+  font-weight: 800;
+  color: #00a878;
+  font-size: 1.2rem;
+  margin-top: 15px;
+  border-top: 1px dashed #ddd;
+  padding-top: 15px;
 }
-.total-amount { color: #00a878; }
 
-.btn-confirm-booking {
-  width: 100%; padding: 15px; background-color: #00a878; color: white;
-  border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
-  cursor: pointer; transition: background 0.3s;
+.confirm-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: #00a878;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.3s;
 }
-.btn-confirm-booking:hover { background-color: #008f66; }
-.btn-confirm-booking:disabled { background-color: #ccc; cursor: not-allowed; }
-.terms-text { text-align: center; color: #999; font-size: 0.85rem; margin-top: 1rem; }
 
-/* --- Right Side - Summary Card Styling --- */
-.field-summary-section { flex: 1; }
-.summary-card {
-  background: white; border-radius: 12px; overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: sticky; top: 100px;
+.confirm-btn:hover {
+  background-color: #008f66;
 }
-.summary-image {
-  height: 200px; background-size: cover; background-position: center;
-  background-color: #e0e0e0;
-}
-.summary-details { padding: 25px; }
-.summary-type { color: #00a878; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; }
-.summary-details h2 { margin: 10px 0; font-size: 1.5rem; color: #1a1a1a; }
-.summary-address { color: #666; margin-bottom: 1.5rem; }
-.amenities-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; }
-.amenity-tag {
-  background: #f0fcf9; color: #00a878; padding: 6px 12px;
-  border-radius: 20px; font-size: 0.85rem; font-weight: 500;
-}
-.mini-map img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #eee; }
 
-/* Responsive design */
+/* Responsive */
 @media (max-width: 900px) {
-  .booking-content { flex-direction: column-reverse; }
-  .summary-card { position: static; }
+  .booking-content {
+    flex-direction: column;
+  }
 }

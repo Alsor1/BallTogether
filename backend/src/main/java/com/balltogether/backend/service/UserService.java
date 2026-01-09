@@ -2,6 +2,7 @@ package com.balltogether.backend.service;
 
 import com.balltogether.backend.entity.Users;
 import com.balltogether.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -12,35 +13,26 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(Users user) {
-        if (userRepository.countEmailUsage(user.getEmail()) > 0) {
-            throw new IllegalStateException("Email is already taken");
-        }
-        if (user.getRole() == null) {
-            user.setRole("USER");
-        }
-        String hashed = passwordEncoder.encode(user.getPassword());
-        userRepository.saveUserNative(
-            user.getFullName(),
-            user.getEmail(),
-            hashed,
-            user.getRole()
-        );
+    public Optional<Users> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
-    public Users loginUser(String email, String password) {
-        Optional<Users> userOpt = userRepository.findByEmailNative(email);
-        if (userOpt.isPresent()) {
-            Users user = userOpt.get();
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return user;
-            }
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    public void registerUser(Users user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalStateException("Email already taken");
         }
-        return null;
+        // Encrypt password before saving
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        userRepository.save(user);
     }
 }

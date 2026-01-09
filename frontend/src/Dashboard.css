@@ -1,0 +1,248 @@
+/** Dashboard.css - Modern Design */
+.dashboard-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  min-height: 80vh;
+}
+
+.dashboard-header {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 1rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #111;
+}
+
+.dashboard-header p {
+  color: #666;
+}
+
+/* Grid Layout */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+/* Card Design */
+.event-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Header with Sport Color Stripes */
+.card-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+/* Dynamic colors based on sport */
+.event-card[data-sport="Soccer"] .card-header { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+.event-card[data-sport="Basketball"] .card-header { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+.event-card[data-sport="Tennis"] .card-header { background: linear-gradient(135deg, #f1f8e9, #dcedc8); }
+
+.sport-badge {
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.planned { background: #e6fffa; color: #00a878; }
+.status-badge.finished { background: #f1f3f5; color: #868e96; }
+
+/* Card Body */
+.card-body {
+  padding: 1.25rem;
+  flex: 1;
+}
+
+.location-name {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.location-address {
+  margin: 0 0 16px 0;
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.time-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f9fbfb;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.date-box {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.time-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.arrow { color: #ccc; }
+
+.role-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.role-tag {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.role-tag.host { background: #fff8c5; color: #b48506; }
+.role-tag.participant { background: #e1f5fe; color: #0277bd; }
+
+.participant-count { color: #888; }
+
+/* Footer / Invite Section */
+.card-footer {
+  padding: 10px 1.25rem;
+  border-top: 1px solid #f0f0f0;
+  background: #fff;
+}
+
+.invite-toggle-btn {
+  width: 100%;
+  padding: 8px;
+  border: 1px dashed #ccc;
+  background: transparent;
+  color: #666;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.invite-toggle-btn:hover {
+  border-color: #00a878;
+  color: #00a878;
+  background: #f0fcf9;
+}
+
+.invite-drawer {
+  display: flex;
+  gap: 8px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.invite-drawer input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.invite-drawer input:focus {
+  outline: none;
+  border-color: #00a878;
+}
+
+.drawer-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.send-btn {
+  background: #00a878;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.cancel-btn {
+  background: #fee2e2;
+  color: #ef4444;
+  border: none;
+  border-radius: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 2px dashed #e0e0e0;
+}
+
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+.action-btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background: #00a878;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+}

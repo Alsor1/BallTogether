@@ -1,4 +1,4 @@
-/** Clasa pentru reprezentarea unui card de teren individual
+/** Clasa pentru reprezentarea unui card de teren cu imagine dinamica
  * @author [Your Name]
  * @version 10 Decembrie 2025
  */
@@ -13,20 +13,25 @@ interface FieldProps {
   price: number;
   players: number;
   type: string;
+  imageUrl: string; // Dynamic image from DB
 }
 
-const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, type }) => {
+const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, type, imageUrl }) => {
   const navigate = useNavigate();
-
-  const handleBookingClick = () => {
-    // Navigates to the booking route with the specific field ID
-    navigate(`/book/${id}`);
-  };
 
   return (
     <div className="field-card">
-      <div className="card-img-placeholder">
-        {/* Type badge (e.g., Soccer, Basketball) */}
+      <div 
+        className="card-img-container" 
+        style={{ 
+          backgroundImage: `url(${imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '200px',
+          borderRadius: '12px 12px 0 0',
+          position: 'relative'
+        }}
+      >
         <span className="badge">{type}</span>
       </div>
       <div className="card-info">
@@ -38,10 +43,9 @@ const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, ty
           <span className="players">👥 {players} players</span>
         </div>
 
-        {/* This button now triggers the redirection to the Booking Page */}
         <button 
           className="book-btn" 
-          onClick={handleBookingClick}
+          onClick={() => navigate(`/book/${id}`)} // Redirect to booking
         >
           Book Now
         </button>

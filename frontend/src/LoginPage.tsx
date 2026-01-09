@@ -30,6 +30,75 @@ const LoginPage: React.FC = () => {
     return null;
   };
 
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Verifică potrivirea parolelor în frontend
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
+
+    const payload = {
+      fullName: formData.fullName,  // Trebuie să fie "fullName" (camelCase)
+      email: formData.email,
+      password: formData.password
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (response.ok) {
+        alert("Account created! Please login.");
+        // Comută la ecranul de login
+        setIsLogin(true);
+        setFormData({ fullName: '', email: '', password: '', confirmPassword: '' });
+      } else {
+        const errorMsg = await response.text();
+        setError("Error: " + errorMsg);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Could not connect to the server.");
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const payload = { 
+      email: formData.email, 
+      password: formData.password 
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        // Salvează atât email-ul cât și ID-ul userului
+        localStorage.setItem('user', formData.email);
+        localStorage.setItem('userId', userData.id.toString());
+        localStorage.setItem('userEmail', userData.email);
+        localStorage.setItem('userName', userData.fullName || userData.name);
+        navigate('/dashboard');
+      } else {
+        const msg = await response.text();
+        setError(msg || "Authentication failed.");
+      }
+    } catch (err) {
+      setError("Could not connect to the server.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -39,32 +108,10 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    const endpoint = isLogin ? '/api/users/login' : '/api/users/register';
-    const payload = isLogin 
-      ? { email: formData.email, password: formData.password }
-      : { fullName: formData.fullName, email: formData.email, password: formData.password };
-
-    try {
-      const response = await fetch(`http://localhost:8080${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        if (isLogin) {
-          localStorage.setItem('user', formData.email);
-          navigate('/dashboard');
-        } else {
-          alert("Registration successful! Please log in.");
-          setIsLogin(true);
-        }
-      } else {
-        const msg = await response.text();
-        setError(msg || "Authentication failed.");
-      }
-    } catch (err) {
-      setError("Could not connect to the server.");
+    if (isLogin) {
+      await handleLogin(e);
+    } else {
+      await handleRegister(e);
     }
   };
 

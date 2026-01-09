@@ -3,14 +3,17 @@
  * @version 10 Decembrie 2025
  */
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {
-  const location = useLocation();
+  const navigate = useNavigate();
+  const user = localStorage.getItem('user'); // Check if user email is stored
 
-  // Helper function to check if a link is active for styling
-  const isActive = (path: string) => location.pathname === path ? 'active' : '';
+  const handleLogout = () => {
+    localStorage.removeItem('user'); // Clear session
+    navigate('/login');
+  };
 
   return (
     <nav className="main-navbar">
@@ -20,20 +23,19 @@ const Navbar: React.FC = () => {
         </Link>
       </div>
       <div className="nav-right">
-        <Link to="/" className={`nav-link ${isActive('/')}`}>Home</Link>
+        <Link to="/" className="nav-link">Home</Link>
+        <Link to="/fields" className="nav-link">📍 Fields</Link>
+        <Link to="/referees" className="nav-link">👥 Referees</Link>
         
-        {/* Redirection to Fields Page */}
-        <Link to="/fields" className={`nav-link ${isActive('/fields')}`}>
-          <span className="icon">📍</span> Fields
-        </Link>
-        
-        {/* Redirection to Referees Page */}
-        <Link to="/referees" className={`nav-link ${isActive('/referees')}`}>
-          <span className="icon">👥</span> Referees
-        </Link>
-        
-        {/* Dynamic Login Button */}
-        <Link to="/login" className="login-pill">Login</Link>
+        {/* Conditional Rendering based on Auth State */}
+        {user ? (
+          <>
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+            <button onClick={handleLogout} className="login-pill logout-btn">Logout</button>
+          </>
+        ) : (
+          <Link to="/login" className="login-pill">Login</Link>
+        )}
       </div>
     </nav>
   );

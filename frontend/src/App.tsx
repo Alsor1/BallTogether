@@ -9,9 +9,9 @@ import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
 import Dashboard from './Dashboard';
 import Footer from './Footer';
-import FieldsPage from './FieldPage';
+import FieldsPage from './FieldPage'; // Asigură-te că numele fișierului este corect (FieldPage vs FieldsPage)
 import BookingPage from './BookingPage';
-import RefereesPage from './RefereesPage'
+import RefereesPage from './RefereesPage';
 import './App.css';
 
 const App: React.FC = () => {
@@ -23,15 +23,18 @@ const App: React.FC = () => {
 
         {/* Main content area that expands to push footer down */}
         <main style={{ flex: 1 }}>
-<Routes>
-  <Route path="/" element={<LandingPage />} />
-  <Route path="/fields" element={<FieldsPage />} />
-  {/* Add this new route */}
-  <Route path="/book/:fieldId" element={<BookingPage />} />
-  <Route path="/login" element={<LoginPage />} />
-  <Route path="/dashboard" element={<Dashboard />} />
-  <Route path="/referees" element={<RefereesPage />} />
-</Routes>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/fields" element={<FieldsPage />} />
+            
+            {/* --- MODIFICARE AICI --- */}
+            {/* Am schimbat :fieldId în :id pentru a se potrivi cu useParams din BookingPage */}
+            <Route path="/book/:id" element={<BookingPage />} />
+            
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/referees" element={<RefereesPage />} />
+          </Routes>
         </main>
 
         {/* Global footer present on all pages  */}
