@@ -1,3 +1,7 @@
+/** Clasa pentru RefereeController
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.controller;
 
 import com.balltogether.backend.dto.RefereeDTO;
@@ -30,7 +34,7 @@ public class RefereeController {
         return ResponseEntity.ok(convertToDTO(referees, null));
     }
 
-    // --- ENDPOINT NOU: Arbitri disponibili într-un interval de timp ---
+    // Get available referees for time range
     @GetMapping("/available")
     public ResponseEntity<List<RefereeDTO>> getAvailableReferees(
             @RequestParam String startTime,
@@ -39,10 +43,8 @@ public class RefereeController {
         LocalDateTime start = LocalDateTime.parse(startTime);
         LocalDateTime end = LocalDateTime.parse(endTime);
         
-        // Găsește ID-urile arbitrilor ocupați
         List<Long> busyRefereeIds = eventRepository.findBusyRefereeIds(start, end);
         
-        // Ia toți arbitrii și filtrează-i pe cei ocupați
         List<Referee> allReferees = refereeRepository.findAll();
         List<Referee> availableReferees = allReferees.stream()
                 .filter(ref -> !busyRefereeIds.contains(ref.getId()))

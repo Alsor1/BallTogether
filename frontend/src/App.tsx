@@ -1,6 +1,6 @@
-/** Clasa pentru gestionarea rutei principale a aplicatiei
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru App
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -9,7 +9,7 @@ import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
 import Dashboard from './Dashboard';
 import Footer from './Footer';
-import FieldsPage from './FieldPage'; // Asigură-te că numele fișierului este corect (FieldPage vs FieldsPage)
+import FieldsPage from './FieldPage';
 import BookingPage from './BookingPage';
 import RefereesPage from './RefereesPage';
 import AdminPage from './AdminPage';

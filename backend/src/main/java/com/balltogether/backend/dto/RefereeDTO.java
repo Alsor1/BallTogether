@@ -1,3 +1,7 @@
+/** Clasa pentru RefereeDTO
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.dto;
 
 import lombok.Data;
@@ -7,11 +11,11 @@ import java.util.List;
 @Data
 public class RefereeDTO {
     private Long id;
-    private String name;       // Vine din Users table
-    private List<String> sports; // Lista de nume de sporturi
+    private String name;
+    private List<String> sports;
     private String bio;
     private BigDecimal price;
-    private String imageUrl;   // Din DB sau generat automat
+    private String imageUrl;
 
     public RefereeDTO(Long id, String name, List<String> sports, String bio, BigDecimal price, String imageUrl) {
         this.id = id;
@@ -19,7 +23,6 @@ public class RefereeDTO {
         this.sports = sports;
         this.bio = bio;
         this.price = price;
-        // Dacă nu are poză în DB, generăm un avatar automat bazat pe nume
         if (imageUrl != null && !imageUrl.trim().isEmpty()) {
             this.imageUrl = imageUrl;
         } else {

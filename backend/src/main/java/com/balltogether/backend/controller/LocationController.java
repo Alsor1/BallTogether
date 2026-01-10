@@ -1,3 +1,7 @@
+/** Clasa pentru LocationController
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.controller;
 
 import com.balltogether.backend.entity.Location;
@@ -20,13 +24,8 @@ public class LocationController {
         return locationRepository.findAllLocationsNative();
     }
 
-    // Aceasta este metoda care îți lipsea sau nu mergea
     @GetMapping("/{id}")
     public ResponseEntity<Location> getLocationById(@PathVariable Long id) {
-        // Verifică consola serverului Java când accesezi pagina. 
-        // Dacă nu apare nimic, cererea e blocată de Security înainte să ajungă aici.
-        System.out.println("Fetching location with ID: " + id); 
-        
         return locationRepository.findByIdNative(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

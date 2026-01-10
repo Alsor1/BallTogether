@@ -1,3 +1,7 @@
+/** Clasa pentru BackendApplication
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend;
 
 import org.springframework.boot.SpringApplication;

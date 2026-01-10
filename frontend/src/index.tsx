@@ -1,3 +1,7 @@
+/** Clasa pentru index
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

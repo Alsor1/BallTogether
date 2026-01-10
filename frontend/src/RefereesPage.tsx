@@ -1,5 +1,6 @@
-/** RefereesPage.tsx - Încărcare dinamică bazată pe DB real
- * @version Ianuarie 2026
+/** Clasa pentru RefereesPage
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React, { useEffect, useState } from 'react';
 import './RefereesPage.css';
@@ -7,7 +8,7 @@ import './RefereesPage.css';
 interface Referee {
   id: number;
   name: string;
-  sports: string[]; // Array de string-uri din DTO
+  sports: string[];
   bio: string;
   imageUrl: string;
   price: number;

@@ -1,6 +1,6 @@
-/** Clasa pentru reprezentarea unui card de arbitru (Vizualizare simplificata)
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru RefereeCard
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React from 'react';
 import './RefereesPage.css';

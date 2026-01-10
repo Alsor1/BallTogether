@@ -1,5 +1,6 @@
-/** FieldsPage.tsx - Corectat pentru a folosi latitude/longitude
- * @version 10 Decembrie 2025
+/** Clasa pentru FieldPage
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
@@ -8,7 +9,7 @@ import L from 'leaflet';
 import FieldCard from './FieldCard';
 import './FieldsPage.css';
 
-// Fix pentru iconițele Leaflet care lipsesc uneori în React
+// Leaflet icon fix for React
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -20,18 +21,18 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Definim interfața exact cum vine din Backend (Java Location Entity)
+// Location interface matching backend entity
 interface FieldData {
   id: number;
   name: string;
   address: string;
-  price: number;       // Mapare automată din price_per_hour
-  players: number;     // Mapare automată din capacity
-  latitude: number;    // <--- NUME CORECTAT (era lat)
-  longitude: number;   // <--- NUME CORECTAT (era lng)
+  price: number;
+  players: number;
+  latitude: number;
+  longitude: number;
   imageUrl: string;
-  type?: string;       // Opțional, în caz că lipsește
-  sports?: { id: number; name: string }[]; // Sporturile disponibile
+  type?: string;
+  sports?: { id: number; name: string }[];
 }
 
 const FieldsPage: React.FC = () => {
@@ -44,7 +45,6 @@ const FieldsPage: React.FC = () => {
         const response = await fetch('http://localhost:8080/api/locations');
         if (response.ok) {
           const data = await response.json();
-          console.log("Date primite:", data); // Verifică în consolă structura
           setFields(data);
         }
       } catch (error) {
@@ -56,7 +56,7 @@ const FieldsPage: React.FC = () => {
     fetchFields();
   }, []);
 
-  // Coordonate centru București
+  // Map center: Bucharest
   const mapCenter: [number, number] = [44.4268, 26.1025];
 
   return (
@@ -67,13 +67,10 @@ const FieldsPage: React.FC = () => {
       </section>
 
       <section className="map-section">
-        {/* Folosim o condiție pentru a nu randat harta până nu avem date, opțional */}
         <MapContainer center={mapCenter} zoom={12} style={{ height: '400px', width: '100%', borderRadius: '12px' }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           
           {fields.map(field => (
-            // AICI ESTE FIX-UL: folosim latitude și longitude
-            // Verificăm dacă există coordonatele înainte de a crea markerul
             field.latitude && field.longitude ? (
               <Marker key={field.id} position={[field.latitude, field.longitude]}>
                 <Popup>

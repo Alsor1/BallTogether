@@ -1,6 +1,6 @@
-/** Navbar.tsx
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru Navbar
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,9 +8,8 @@ import './Navbar.css';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const userStr = localStorage.getItem('user'); // Check if user is stored
+  const userStr = localStorage.getItem('user');
   
-  // Parse user to check role
   let user = null;
   let isAdmin = false;
   let isLoggedIn = false;
@@ -18,15 +17,12 @@ const Navbar: React.FC = () => {
   if (userStr) {
     try {
       const parsed = JSON.parse(userStr);
-      // Check if it's a valid user object (has id or email)
       if (parsed && typeof parsed === 'object' && (parsed.id || parsed.email)) {
         user = parsed;
         isAdmin = user.role === 'Admin';
         isLoggedIn = true;
       }
     } catch {
-      // If JSON parse fails, it might be old format (just email string)
-      // Check if userId exists as fallback
       if (localStorage.getItem('userId')) {
         isLoggedIn = true;
       }

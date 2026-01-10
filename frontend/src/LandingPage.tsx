@@ -1,6 +1,6 @@
-/** LandingPage.tsx
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru LandingPage
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,34 +8,6 @@ import './LandingPage.css';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-
-  // This matches the "Popular Fields" section from your design images
-  const popularFields = [
-    { 
-      id: 1, 
-      name: 'Central Park Soccer', 
-      type: 'Soccer', 
-      address: '123 Central Ave, Downtown', 
-      price: 50, 
-      players: 22 
-    },
-    { 
-      id: 2, 
-      name: 'Riverside Basketball', 
-      type: 'Basketball', 
-      address: '456 River Rd, Eastside', 
-      price: 35, 
-      players: 10 
-    },
-    { 
-      id: 3, 
-      name: 'Elite Tennis Club', 
-      type: 'Tennis', 
-      address: '789 Oak Blvd, Westend', 
-      price: 40, 
-      players: 4 
-    },
-  ];
 
   return (
     <div className="landing-container">
@@ -51,7 +23,6 @@ const LandingPage: React.FC = () => {
             >
               Find a Field →
             </button>
-            <button className="btn-secondary">Browse Referees</button>
           </div>
         </div>
       </section>
@@ -101,35 +72,6 @@ const LandingPage: React.FC = () => {
             <h3>Split & Pay</h3>
             <p>Everyone pays their share securely through the app</p>
           </div>
-        </div>
-      </section>
-
-      {/* Popular Fields - As seen in image_81e504.jpg */}
-      <section className="popular-fields">
-        <div className="section-header">
-          <div>
-            <h2>Popular Fields</h2>
-            <p>Discover the most booked sports venues in your area</p>
-          </div>
-          <button className="view-all" onClick={() => navigate('/fields')}>View All →</button>
-        </div>
-        <div className="fields-grid">
-          {popularFields.map(field => (
-            <div key={field.id} className="field-card">
-              <div className="card-img-placeholder">
-                <span className="badge">{field.type}</span>
-              </div>
-              <div className="card-info">
-                <h3>{field.name}</h3>
-                <p className="address">📍 {field.address}</p>
-                <div className="card-footer-info">
-                  <span className="price"><strong>$</strong> {field.price}/hr</span>
-                  <span className="players">👥 {field.players} players</span>
-                </div>
-                <button className="book-btn">Book Now</button>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 

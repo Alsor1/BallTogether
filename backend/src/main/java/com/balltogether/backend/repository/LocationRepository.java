@@ -1,5 +1,6 @@
-/** Repository pentru Locatii folosind SQL nativ
- * @author [Your Name]
+/** Clasa pentru LocationRepository
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.repository;
 
@@ -13,7 +14,6 @@ import java.util.List;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    // Folosim JPQL pentru a încărca și relațiile (sports)
     @Query("SELECT DISTINCT l FROM Location l LEFT JOIN FETCH l.sports")
     List<Location> findAllLocationsNative();
     

@@ -1,6 +1,6 @@
-/** Entity pentru utilizatori mapată exact pe structura bazei de date
- * @author [Numele Tău]
- * @version 10 Decembrie 2025
+/** Clasa pentru Users
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.entity;
 
@@ -27,12 +27,10 @@ public class Users {
     private String passwordHash;
 
     @Column(name = "role")
-    private String role = "User"; // Default role is "User", can be "Admin" or "Referee"
+    private String role = "User";
 
-    // Default constructor
     public Users() {}
 
-    // All args constructor
     public Users(Long id, String fullName, String email, String passwordHash) {
         this.id = id;
         this.fullName = fullName;
@@ -40,7 +38,6 @@ public class Users {
         this.passwordHash = passwordHash;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

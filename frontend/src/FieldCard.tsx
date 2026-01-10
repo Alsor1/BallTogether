@@ -1,6 +1,6 @@
-/** Clasa pentru reprezentarea unui card de teren cu imagine dinamica
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru FieldCard
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,8 +13,8 @@ interface FieldProps {
   price: number;
   players: number;
   type: string;
-  imageUrl: string; // Dynamic image from DB
-  sports?: { id: number; name: string }[]; // Sporturile disponibile
+  imageUrl: string;
+  sports?: { id: number; name: string }[];
 }
 
 const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, type, imageUrl, sports }) => {
@@ -55,7 +55,7 @@ const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, ty
 
         <button 
           className="book-btn" 
-          onClick={() => navigate(`/book/${id}`)} // Redirect to booking
+          onClick={() => navigate(`/book/${id}`)}
         >
           Book Now
         </button>

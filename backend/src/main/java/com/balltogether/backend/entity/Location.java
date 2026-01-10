@@ -1,6 +1,6 @@
-/** Entity pentru Locatii/Terenuri
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru Location
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.entity;
 
@@ -15,25 +15,24 @@ import java.util.Set;
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_id") // Potrivește cu diagrama
+    @Column(name = "location_id")
     private Long id;
     
     private String name;
     private String address;
     
-    @Column(name = "price_per_hour") // Potrivește cu diagrama
+    @Column(name = "price_per_hour")
     private Double price; 
     
-    @Column(name = "capacity") // În diagramă este 'capacity', nu 'players'
+    @Column(name = "capacity")
     private Integer players;
 
-    private Double latitude; // Schimbat din lat în latitude
-    private Double longitude; // Schimbat din lng în longitude
+    private Double latitude;
+    private Double longitude;
     
     @Column(name = "image_url")
     private String imageUrl;
 
-    // --- RELAȚIE NOUĂ: Sporturile disponibile pe acest teren ---
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "location_sports",

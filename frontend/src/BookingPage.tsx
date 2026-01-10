@@ -1,5 +1,6 @@
-/** BookingPage.tsx - Cu Selectare Arbitru
- * @version 10 Ianuarie 2026
+/** Clasa pentru BookingPage
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -20,11 +21,10 @@ interface OccupiedSlot {
   endTime: string;
 }
 
-// Interfață nouă pentru Arbitru (bazată pe DTO-ul creat anterior)
 interface Referee {
   id: number;
   name: string;
-  price: number; // ratePerHour
+  price: number;
   imageUrl: string;
   sports: string[];
 }
@@ -36,7 +36,6 @@ const BookingPage: React.FC = () => {
   const [location, setLocation] = useState<LocationData | null>(null);
   const [occupiedSlots, setOccupiedSlots] = useState<OccupiedSlot[]>([]);
   
-  // State-uri noi pentru Arbitri
   const [referees, setReferees] = useState<Referee[]>([]);
   const [selectedRefereeId, setSelectedRefereeId] = useState<number | null>(null);
   
@@ -47,23 +46,20 @@ const BookingPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [loadingReferees, setLoadingReferees] = useState(false);
 
-  // 1. Fetch Data (Locație, Sloturi Ocupate)
+  // Fetch location and occupied slots
   useEffect(() => {
     const fetchData = async () => {
       if (!id) return;
       try {
-        // Fetch Location
         const locRes = await fetch(`http://localhost:8080/api/locations/${id}`);
         if (locRes.ok) {
           const data = await locRes.json();
           setLocation({ ...data, price: data.price || data.price_per_hour });
-          // Setare sport implicit din sporturile disponibile
           if (data.sports && data.sports.length > 0) {
             setSelectedSport(data.sports[0].name);
           }
         }
 
-        // Fetch Occupied Slots
         const slotsRes = await fetch(`http://localhost:8080/api/bookings/occupied/${id}`);
         if (slotsRes.ok) {
           setOccupiedSlots(await slotsRes.json());
@@ -76,7 +72,7 @@ const BookingPage: React.FC = () => {
     fetchData();
   }, [id]);
 
-  // 2. Fetch arbitri disponibili când se schimbă intervalul de timp
+  // Fetch available referees when time range changes
   useEffect(() => {
     const fetchAvailableReferees = async () => {
       if (!startTime || !endTime) {
@@ -99,7 +95,7 @@ const BookingPage: React.FC = () => {
         );
         if (refRes.ok) {
           setReferees(await refRes.json());
-          setSelectedRefereeId(null); // Reset arbitru la schimbare de timp
+          setSelectedRefereeId(null);
         }
       } catch (error) {
         console.error("Error fetching available referees:", error);
@@ -111,7 +107,7 @@ const BookingPage: React.FC = () => {
     fetchAvailableReferees();
   }, [startTime, endTime]);
 
-  // 3. Calcul Preț (Include și Arbitrul)
+  // Calculate total price
   useEffect(() => {
     setErrorMsg('');
     setTotalPrice(0);
@@ -138,24 +134,21 @@ const BookingPage: React.FC = () => {
 
       const diffHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
       
-      // Calculăm costul arbitrului (dacă e selectat)
       let refereeCostPerHour = 0;
       if (selectedRefereeId) {
         const referee = referees.find(r => r.id === selectedRefereeId);
         if (referee) refereeCostPerHour = referee.price;
       }
 
-      // Preț total = (Preț Teren + Preț Arbitru) * Ore
       const totalHourlyRate = location.price + refereeCostPerHour;
       setTotalPrice(diffHours * totalHourlyRate);
     }
   }, [startTime, endTime, location, occupiedSlots, selectedRefereeId, referees]);
 
-  // 3. Confirm Booking
+  // Confirm booking
   const handleConfirmBooking = async () => {
     if (errorMsg) return;
 
-    // Logica de User ID (păstrată din codul tău)
     let userId: number | null = null;
     const storedId = localStorage.getItem('userId');
     if (storedId) {
@@ -184,10 +177,9 @@ const BookingPage: React.FC = () => {
       userId: userId,
       locationId: location?.id,
       sportId: sportIdMap[selectedSport] || 1,
-      refereeId: selectedRefereeId, // <--- Trimitem ID-ul arbitrului (poate fi null)
+      refereeId: selectedRefereeId,
       startTime: startTime,
       endTime: endTime,
-      // Backend-ul nu folosește totalAmount din frontend pentru validare, dar e bine să-l trimitem dacă e nevoie
     };
 
     try {
@@ -212,7 +204,6 @@ const BookingPage: React.FC = () => {
 
   if (!location) return <div className="loading">Loading location...</div>;
 
-  // Găsim arbitrul selectat pentru a-i afișa prețul în sumar
   const selectedReferee = referees.find(r => r.id === selectedRefereeId);
 
   return (
@@ -244,7 +235,7 @@ const BookingPage: React.FC = () => {
                 value={selectedSport} 
                 onChange={(e) => {
                   setSelectedSport(e.target.value);
-                  setSelectedRefereeId(null); // Resetează arbitrul când se schimbă sportul
+                  setSelectedRefereeId(null);
                 }}
                 className="input-field"
               >

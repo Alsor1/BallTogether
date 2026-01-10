@@ -1,6 +1,6 @@
-/** Clasa Controller pentru operatii CRUD pe colectia de Evenimente
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru EventController
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.controller;
 
@@ -43,7 +43,7 @@ public class EventController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Obține toate evenimentele relevante pentru utilizator (Gazdă SAU Participant)
+    // Get all events for user (host or participant)
     @GetMapping("/user/{identifier}")
     public ResponseEntity<List<Event>> getEventsByUser(@PathVariable String identifier) {
         try {
@@ -61,7 +61,7 @@ public class EventController {
         }
     }
 
-    // --- ENDPOINT NOU: Invită Utilizator ---
+    // Invite user to event
     @PostMapping("/{eventId}/invite")
     public ResponseEntity<?> inviteUser(@PathVariable Long eventId, @RequestBody Map<String, String> payload) {
         try {
@@ -71,22 +71,14 @@ public class EventController {
                 return ResponseEntity.badRequest().body("Email is required");
             }
             
-            // Verifică dacă evenimentul există
             Optional<Event> eventOpt = eventRepository.findById(eventId);
             if (eventOpt.isEmpty()) {
-                // Listează evenimentele existente pentru debug
-                List<Event> allEvents = eventRepository.findAll();
-                String existingIds = allEvents.stream()
-                    .map(e -> e.getId().toString())
-                    .reduce((a, b) -> a + ", " + b)
-                    .orElse("none");
                 return ResponseEntity.badRequest()
-                    .body("Event with ID " + eventId + " not found. Existing event IDs: " + existingIds);
+                    .body("Event with ID " + eventId + " not found");
             }
             
             Event event = eventOpt.get();
             
-            // Verifică dacă utilizatorul există
             Optional<Users> userOpt = userRepository.findByEmail(email.trim());
             if (userOpt.isEmpty()) {
                 return ResponseEntity.badRequest().body("User with email '" + email + "' does not exist");
@@ -94,17 +86,14 @@ public class EventController {
             
             Users userToInvite = userOpt.get();
 
-            // Verifică dacă este deja host
             if (event.getHost() != null && event.getHost().getId().equals(userToInvite.getId())) {
                 return ResponseEntity.badRequest().body("User is already the host of this event");
             }
 
-            // Verifică dacă este deja participant
             if (event.getParticipants() != null && event.getParticipants().contains(userToInvite)) {
                 return ResponseEntity.badRequest().body("User is already participating");
             }
 
-            // Adaugă participantul
             event.getParticipants().add(userToInvite);
             eventRepository.save(event);
 

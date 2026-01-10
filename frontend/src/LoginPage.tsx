@@ -1,6 +1,6 @@
-/** Clasa pentru gestionarea autentificarii si inregistrarii utilizatorilor
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru LoginPage
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(''); // Clear error when user types
+    setError('');
   };
 
   const validateForm = () => {
@@ -33,14 +33,13 @@ const LoginPage: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Verifică potrivirea parolelor în frontend
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
 
     const payload = {
-      fullName: formData.fullName,  // Trebuie să fie "fullName" (camelCase)
+      fullName: formData.fullName,
       email: formData.email,
       password: formData.password
     };
@@ -54,7 +53,6 @@ const LoginPage: React.FC = () => {
       
       if (response.ok) {
         alert("Account created! Please login.");
-        // Comută la ecranul de login
         setIsLogin(true);
         setFormData({ fullName: '', email: '', password: '', confirmPassword: '' });
       } else {
@@ -84,7 +82,6 @@ const LoginPage: React.FC = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        // Salvează userul ca obiect JSON complet
         localStorage.setItem('user', JSON.stringify({
           id: userData.id,
           email: userData.email,

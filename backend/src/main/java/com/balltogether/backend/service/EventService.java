@@ -1,6 +1,6 @@
-/** Serviciu pentru gestionarea logicii de business si validarea evenimentelor
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru EventService
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.service;
 
@@ -23,7 +23,6 @@ public class EventService {
     }
 
     public void createEvent(Event event) {
-        // Validarea campurilor introduse (Cerinta A.1)
         if (event.getStartTime() == null || event.getEndTime() == null) {
             throw new IllegalStateException("Start and end times are required.");
         }
@@ -37,12 +36,11 @@ public class EventService {
             event.getSport().getId(),
             event.getStartTime(),
             event.getEndTime(),
-            "PLANNED" // Initial status
+            "PLANNED"
         );
     }
 
     public void updateEventStatus(Long id, String status) {
-        // Logica pentru colectie de activitati: in desfasurare, suspendata, finalizata (Cerinta A.2)
         eventRepository.updateStatusNative(id, status);
     }
 

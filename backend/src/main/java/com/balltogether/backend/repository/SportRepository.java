@@ -1,3 +1,7 @@
+/** Clasa pentru SportRepository
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.repository;
 
 import com.balltogether.backend.entity.Sport;

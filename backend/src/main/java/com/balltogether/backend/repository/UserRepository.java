@@ -1,6 +1,6 @@
-/** Interfata Repository pentru Utilizatori folosind SQL nativ
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru UserRepository
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.repository;
 

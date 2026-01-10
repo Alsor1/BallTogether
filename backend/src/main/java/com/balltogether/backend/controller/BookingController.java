@@ -1,3 +1,7 @@
+/** Clasa pentru BookingController
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.controller;
 
 import com.balltogether.backend.dto.BookingRequest;
@@ -20,8 +24,7 @@ public class BookingController {
     @Autowired private EventRepository eventRepository;
     @Autowired private LocationRepository locationRepository;
     @Autowired private UserRepository userRepository;
-    @Autowired private RefereeRepository refereeRepository; // <--- INJECTARE NOUĂ
-    // @Autowired private SportRepository sportRepository; // Decomentează dacă ai SportRepository
+    @Autowired private RefereeRepository refereeRepository;
 
     @GetMapping("/occupied/{locationId}")
     public ResponseEntity<List<Event>> getOccupiedSlots(@PathVariable Long locationId) {
@@ -31,22 +34,16 @@ public class BookingController {
     @PostMapping("/confirm")
     public ResponseEntity<?> createBooking(@RequestBody BookingRequest request) {
         try {
-            System.out.println("=== BOOKING REQUEST ===");
-            System.out.println("UserId: " + request.getUserId());
-            System.out.println("LocationId: " + request.getLocationId());
-            System.out.println("RefereeId: " + request.getRefereeId());
-            System.out.println("=======================");
-            
             LocalDateTime start = LocalDateTime.parse(request.getStartTime());
             LocalDateTime end = LocalDateTime.parse(request.getEndTime());
 
-            // 1. Verificare Suprapunere
+            // Check for overlapping bookings
             boolean isOccupied = eventRepository.existsOverlappingEvent(request.getLocationId(), start, end);
             if (isOccupied) {
                 return ResponseEntity.badRequest().body("Selected time slot is already booked.");
             }
 
-            // 2. Creare Eveniment
+            // Create event
             Event event = new Event();
             
             Users host = userRepository.findById(request.getUserId())
@@ -57,13 +54,8 @@ public class BookingController {
                     .orElseThrow(() -> new RuntimeException("Location not found"));
             event.setLocation(location);
 
-            // Setare Sport (Dacă ai SportRepository, caută-l după ID)
-            // Sport sport = sportRepository.findById(request.getSportId()).orElse(null);
-            // event.setSport(sport);
-
-            // --- LOGICĂ NOUĂ: Setare Arbitru ---
+            // Set referee if provided
             if (request.getRefereeId() != null) {
-                // Verifică dacă arbitrul este disponibil în intervalul selectat
                 boolean refereeIsBusy = eventRepository.existsOverlappingEventForReferee(
                         request.getRefereeId(), start, end);
                 if (refereeIsBusy) {

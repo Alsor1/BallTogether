@@ -1,3 +1,7 @@
+/** Clasa pentru reportWebVitals
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 import { ReportHandler } from 'web-vitals';
 
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {

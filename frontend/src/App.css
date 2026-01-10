@@ -1,3 +1,8 @@
+/** Clasa pentru App.css
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
+
 /* Ensure the app container takes the full height of the screen */
 .App {
   display: flex;

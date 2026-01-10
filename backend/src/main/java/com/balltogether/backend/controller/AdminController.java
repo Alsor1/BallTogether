@@ -1,3 +1,7 @@
+/** Clasa pentru AdminController
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.controller;
 
 import com.balltogether.backend.entity.*;
@@ -33,7 +37,7 @@ public class AdminController {
     @Autowired
     private SportRepository sportRepository;
 
-    // ==================== USER MANAGEMENT ====================
+    // USER MANAGEMENT
 
     @GetMapping("/users")
     public ResponseEntity<List<Users>> getAllUsers() {
@@ -43,26 +47,22 @@ public class AdminController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
-            // Check if user exists
             Optional<Users> userOpt = userRepository.findById(id);
             if (userOpt.isEmpty()) {
                 return ResponseEntity.badRequest().body("User not found");
             }
 
-            // Check if user is a referee and remove referee entry first
             Optional<Referee> refereeOpt = refereeRepository.findByUserId(id);
             if (refereeOpt.isPresent()) {
                 refereeRepository.delete(refereeOpt.get());
             }
 
-            // Remove user from all events as participant
             List<Event> events = eventRepository.findAll();
             for (Event event : events) {
                 event.getParticipants().removeIf(u -> u.getId().equals(id));
                 eventRepository.save(event);
             }
 
-            // Delete events where user is host
             List<Event> hostedEvents = eventRepository.findByHostId(id);
             eventRepository.deleteAll(hostedEvents);
 
@@ -98,7 +98,7 @@ public class AdminController {
         }
     }
 
-    // ==================== REFEREE MANAGEMENT ====================
+    // REFEREE MANAGEMENT
 
     @GetMapping("/referees")
     public ResponseEntity<List<Referee>> getAllReferees() {
@@ -118,7 +118,6 @@ public class AdminController {
                 return ResponseEntity.badRequest().body("User not found");
             }
 
-            // Check if already a referee
             Optional<Referee> existingReferee = refereeRepository.findByUserId(userId);
             if (existingReferee.isPresent()) {
                 return ResponseEntity.badRequest().body("User is already a referee");
@@ -134,7 +133,6 @@ public class AdminController {
             referee.setRatePerHour(BigDecimal.valueOf(ratePerHour));
             referee.setImageUrl(imageUrl);
 
-            // Handle sports if provided
             if (payload.containsKey("sportIds")) {
                 @SuppressWarnings("unchecked")
                 List<Integer> sportIds = (List<Integer>) payload.get("sportIds");
@@ -164,14 +162,12 @@ public class AdminController {
             Referee referee = refereeOpt.get();
             Users user = referee.getUser();
             
-            // Remove referee from all events
             List<Event> events = eventRepository.findByRefereeUserId(user.getId());
             for (Event event : events) {
                 event.setReferee(null);
                 eventRepository.save(event);
             }
 
-            // Update user role back to User
             user.setRole("User");
             userRepository.save(user);
 
@@ -183,7 +179,7 @@ public class AdminController {
         }
     }
 
-    // ==================== EVENT MANAGEMENT ====================
+    // EVENT MANAGEMENT
 
     @GetMapping("/events")
     public ResponseEntity<List<Event>> getAllEvents() {
@@ -286,7 +282,7 @@ public class AdminController {
         }
     }
 
-    // ==================== LOCATION (FIELD) MANAGEMENT ====================
+    // LOCATION MANAGEMENT
 
     @GetMapping("/locations")
     public ResponseEntity<List<Location>> getAllLocations() {
@@ -305,7 +301,6 @@ public class AdminController {
             location.setLongitude(Double.valueOf(payload.getOrDefault("longitude", 0).toString()));
             location.setImageUrl((String) payload.getOrDefault("imageUrl", ""));
 
-            // Handle sports if provided
             if (payload.containsKey("sportIds")) {
                 @SuppressWarnings("unchecked")
                 List<Integer> sportIds = (List<Integer>) payload.get("sportIds");
@@ -367,7 +362,6 @@ public class AdminController {
                 return ResponseEntity.badRequest().body("Location not found");
             }
 
-            // Check if location is used in any events
             List<Event> eventsAtLocation = eventRepository.findByLocationId(id);
             if (!eventsAtLocation.isEmpty()) {
                 return ResponseEntity.badRequest().body("Cannot delete location: it has " + eventsAtLocation.size() + " events scheduled. Delete those events first.");
@@ -381,7 +375,7 @@ public class AdminController {
         }
     }
 
-    // ==================== SPORTS MANAGEMENT ====================
+    // SPORTS MANAGEMENT
 
     @GetMapping("/sports")
     public ResponseEntity<List<Sport>> getAllSports() {

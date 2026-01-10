@@ -1,3 +1,7 @@
+/** Clasa pentru AdminPage
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminPage.css';
@@ -61,7 +65,6 @@ const AdminPage: React.FC = () => {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Modal states
   const [showAddLocationModal, setShowAddLocationModal] = useState(false);
   const [showAddRefereeModal, setShowAddRefereeModal] = useState(false);
   const [showEventDetailsModal, setShowEventDetailsModal] = useState(false);
@@ -69,7 +72,6 @@ const AdminPage: React.FC = () => {
   const [newParticipantEmail, setNewParticipantEmail] = useState('');
   const [refereeUserSearch, setRefereeUserSearch] = useState('');
 
-  // Form states
   const [locationForm, setLocationForm] = useState({
     name: '',
     address: '',
@@ -89,7 +91,6 @@ const AdminPage: React.FC = () => {
     sportIds: [] as number[]
   });
 
-  // Check if user is admin
   useEffect(() => {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
@@ -107,7 +108,6 @@ const AdminPage: React.FC = () => {
     }
   }, [navigate]);
 
-  // Fetch data
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -162,7 +162,7 @@ const AdminPage: React.FC = () => {
     setTimeout(() => setMessage(null), 5000);
   };
 
-  // ==================== USER ACTIONS ====================
+  // USER ACTIONS
   const handleDeleteUser = async (userId: number) => {
     if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
     
@@ -199,7 +199,7 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  // ==================== EVENT ACTIONS ====================
+  // EVENT ACTIONS
   const handleDeleteEvent = async (eventId: number) => {
     if (!window.confirm('Are you sure you want to delete this event?')) return;
     
@@ -250,7 +250,6 @@ const AdminPage: React.FC = () => {
         showMessage('success', 'Participant added successfully');
         setNewParticipantEmail('');
         fetchAllData();
-        // Refresh selected event
         const updatedEvent = events.find(e => e.id === selectedEvent.id);
         if (updatedEvent) setSelectedEvent(updatedEvent);
       } else {
@@ -279,7 +278,7 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  // ==================== REFEREE ACTIONS ====================
+  // REFEREE ACTIONS
   const handleCreateReferee = async () => {
     if (!refereeForm.userId) {
       showMessage('error', 'Please select a user');
@@ -328,7 +327,7 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  // ==================== LOCATION ACTIONS ====================
+  // LOCATION ACTIONS
   const handleCreateLocation = async () => {
     if (!locationForm.name || !locationForm.address) {
       showMessage('error', 'Name and address are required');
@@ -376,7 +375,6 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  // Filter data based on search term
   const filteredUsers = users.filter(u => 
     u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -393,8 +391,6 @@ const AdminPage: React.FC = () => {
     l.address.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Get non-referee users for the referee creation dropdown
-  // Exclude users who are already referees (check both role and referees list)
   const refereeUserIds = referees.map(r => r.user?.id).filter(Boolean);
   const nonRefereeUsers = users.filter(u => 
     u.role !== 'Referee' && 

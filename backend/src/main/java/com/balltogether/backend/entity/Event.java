@@ -1,3 +1,7 @@
+/** Clasa pentru Event
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.entity;
 
 import jakarta.persistence.*;
@@ -11,7 +15,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")  // Adaugă numele corect al coloanei din DB
+    @Column(name = "event_id")
     private Long id;
 
     @ManyToOne
@@ -43,15 +47,12 @@ public class Event {
     @Column(name = "status")
     private String status;
 
-    // --- CÂMP NOU: Arbitrul ---
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "referee_id")
     private Referee referee;
 
-    // Default constructor
     public Event() {}
 
-    // Getters
     public Long getId() {
         return id;
     }
@@ -84,12 +85,10 @@ public class Event {
         return status;
     }
 
-    // --- Getter pentru Referee ---
     public Referee getReferee() {
         return referee;
     }
 
-    // Setters
     public void setId(Long id) {
         this.id = id;
     }
@@ -122,7 +121,6 @@ public class Event {
         this.status = status;
     }
 
-    // --- Setter pentru Referee ---
     public void setReferee(Referee referee) {
         this.referee = referee;
     }

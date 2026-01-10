@@ -1,3 +1,7 @@
+/** Clasa pentru RegisterRequest
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.dto;
 
 public class RegisterRequest {
@@ -5,10 +9,8 @@ public class RegisterRequest {
     private String email;
     private String password;
 
-    // Default constructor
     public RegisterRequest() {}
 
-    // Getters and Setters
     public String getFullName() {
         return fullName;
     }

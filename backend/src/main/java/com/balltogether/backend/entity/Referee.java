@@ -1,3 +1,7 @@
+/** Clasa pentru Referee
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.entity;
 
 import jakarta.persistence.*;
@@ -29,7 +33,6 @@ public class Referee {
     @Column(name = "image_url")
     private String imageUrl;
 
-    // --- RELAȚIA NOUĂ (Conform diagramei Referee_Sports) ---
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "referee_sports",

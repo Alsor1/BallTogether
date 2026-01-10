@@ -1,6 +1,6 @@
-/** Serviciu pentru Logica de Rezervare (Eveniment + Booking)
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru BookingService
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.service;
 
@@ -22,13 +22,10 @@ public class BookingService {
     public void confirmBooking(Long hostId, Long locationId, Long sportId, Long refereeId, 
                                LocalDateTime start, LocalDateTime end, BigDecimal amount) {
         
-        // 1. Creare Eveniment (Status implicit 'PLANNED')
         bookingRepository.insertEventNative(hostId, locationId, sportId, refereeId, start, end, "PLANNED");
         
-        // 2. Obținere ID Eveniment generat
         Long newEventId = bookingRepository.getLastInsertedId();
         
-        // 3. Creare Rezervare (Status plată 'PENDING')
         bookingRepository.insertBookingNative(newEventId, hostId, amount, "PENDING", LocalDateTime.now());
     }
 }

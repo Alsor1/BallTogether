@@ -1,3 +1,7 @@
+/** Clasa pentru BookingRequest
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.dto;
 
 public class BookingRequest {
@@ -8,7 +12,6 @@ public class BookingRequest {
     private String startTime;
     private String endTime;
 
-    // Getters and Setters
     public Long getUserId() {
         return userId;
     }

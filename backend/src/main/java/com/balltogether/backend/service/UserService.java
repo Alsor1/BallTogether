@@ -1,3 +1,7 @@
+/** Clasa pentru UserService
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.service;
 
 import com.balltogether.backend.entity.Users;
@@ -31,7 +35,6 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalStateException("Email already taken");
         }
-        // Encrypt password before saving
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
         userRepository.save(user);
     }

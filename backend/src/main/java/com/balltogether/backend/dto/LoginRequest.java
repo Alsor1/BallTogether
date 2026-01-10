@@ -1,13 +1,15 @@
+/** Clasa pentru LoginRequest
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.dto;
 
 public class LoginRequest {
     private String email;
     private String password;
 
-    // Default constructor
     public LoginRequest() {}
 
-    // Getters and Setters
     public String getEmail() {
         return email;
     }

@@ -1,6 +1,6 @@
-/** Repository pentru Gestionarea Rezervărilor și Evenimentelor folosind SQL Nativ
- * @author [Your Name]
- * @version 10 Decembrie 2025
+/** Clasa pentru BookingRepository
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 package com.balltogether.backend.repository;
 

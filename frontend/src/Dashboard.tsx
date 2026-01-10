@@ -1,5 +1,6 @@
-/** Dashboard.tsx - Cu Design Nou și Invitații
- * @version Ianuarie 2026
+/** Clasa pentru Dashboard
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
  */
 import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
@@ -56,7 +57,6 @@ const Dashboard: React.FC = () => {
         const response = await fetch(`http://localhost:8080/api/events/user/${userId}`);
         if (response.ok) {
           const data = await response.json();
-          console.log('Fetched events:', data); // Debug log
           setEvents(data);
         }
       } catch (err) {
@@ -78,7 +78,6 @@ const Dashboard: React.FC = () => {
 
     setInviteLoading(true);
     try {
-      console.log('Inviting user to event ID:', eventId); // Debug log
       const response = await fetch(`http://localhost:8080/api/events/${eventId}/invite`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

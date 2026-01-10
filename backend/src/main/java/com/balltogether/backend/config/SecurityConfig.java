@@ -1,3 +1,7 @@
+/** Clasa pentru SecurityConfig
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.config;
 
 import org.springframework.context.annotation.Bean;

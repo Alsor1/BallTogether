@@ -1,3 +1,7 @@
+/** Clasa pentru UserController
+ * @author Avram Sorin-Alexandru
+ * @version 10 January 2026
+ */
 package com.balltogether.backend.controller;
 
 import com.balltogether.backend.dto.LoginRequest;
@@ -44,12 +48,10 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
         try {
-            // Check if email already exists
             if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                 return ResponseEntity.badRequest().body("Email already registered");
             }
 
-            // Create new user
             Users newUser = new Users();
             newUser.setFullName(request.getFullName());
             newUser.setEmail(request.getEmail());
