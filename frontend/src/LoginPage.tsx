@@ -84,8 +84,13 @@ const LoginPage: React.FC = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        // Salvează atât email-ul cât și ID-ul userului
-        localStorage.setItem('user', formData.email);
+        // Salvează userul ca obiect JSON complet
+        localStorage.setItem('user', JSON.stringify({
+          id: userData.id,
+          email: userData.email,
+          fullName: userData.fullName || userData.name,
+          role: userData.role || 'User'
+        }));
         localStorage.setItem('userId', userData.id.toString());
         localStorage.setItem('userEmail', userData.email);
         localStorage.setItem('userName', userData.fullName || userData.name);

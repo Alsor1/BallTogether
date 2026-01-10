@@ -4,6 +4,7 @@
  */
 package com.balltogether.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,8 +22,12 @@ public class Users {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password_hash")
     private String passwordHash;
+
+    @Column(name = "role")
+    private String role = "User"; // Default role is "User", can be "Admin" or "Referee"
 
     // Default constructor
     public Users() {}
@@ -66,5 +71,13 @@ public class Users {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

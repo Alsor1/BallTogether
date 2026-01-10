@@ -83,6 +83,7 @@ public class UserController {
             response.put("id", user.getId());
             response.put("email", user.getEmail());
             response.put("fullName", user.getFullName());
+            response.put("role", user.getRole() != null ? user.getRole() : "User");
             
             return ResponseEntity.ok(response);
         } catch (Exception e) {

@@ -1,215 +1,109 @@
-/** RefereesPage.css 
- * @author [Your Name]
- * @version 10 Decembrie 2025
- */
+/* RefereesPage.css */
+.referees-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+}
 
-/* Main Container */
-.referees-container {
-  padding: 4rem 10%;
-  background-color: #f9fbfb;
+.referees-header {
   text-align: center;
-}
-
-/* Header Styling */
-.referees-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
-}
-
-.referees-header p {
-  color: #666;
-  max-width: 650px;
-  margin: 0 auto 2.5rem;
-  line-height: 1.6;
-}
-
-/* Filter Bar - Centered without search input */
-.filter-bar-only {
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-.filter-chips {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.chip {
-  padding: 10px 22px;
-  border-radius: 25px;
-  border: 1px solid #ddd;
-  background: white;
-  color: #555;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.chip:hover {
-  border-color: #00a878;
-  color: #00a878;
-}
-
-.chip.active {
-  background-color: #00a878;
-  color: white;
-  border-color: #00a878;
-  box-shadow: 0 4px 10px rgba(0, 168, 120, 0.2);
-}
-
-/* Results Count */
-.results-count {
   margin-bottom: 3rem;
-  color: #888;
-  font-weight: 600;
-  font-size: 0.95rem;
 }
 
-/* Referees Grid */
+.referees-header h1 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
 .referees-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 35px;
-  margin-bottom: 5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
-/* Referee Card Styling */
 .referee-card {
   background: white;
-  padding: 35px 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #eee;
+  transition: transform 0.2s;
 }
 
 .referee-card:hover {
   transform: translateY(-5px);
 }
 
-.referee-avatar img {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
-  border: 4px solid #f0fcf9;
+.referee-image {
+  height: 220px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
 }
 
-.referee-info h3 {
-  margin: 10px 0 5px;
-  font-size: 1.4rem;
-  color: #1a1a1a;
+.referee-details {
+  padding: 1.5rem;
 }
 
-.rating {
-  color: #ffb400;
-  font-weight: 700;
-  margin-bottom: 15px;
-}
-
-.short-bio {
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  min-height: 60px;
-}
-
-/* Sports Specialty Tags */
-.sports-tags {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+.sport-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .sport-tag {
-  background: #20232a;
-  color: white;
-  padding: 4px 12px;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 4px 10px;
   border-radius: 20px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
-.rate-info {
-  margin-top: auto;
+.referee-details h3 {
+  margin: 5px 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.description {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  height: 40px; /* Limit height */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1rem;
 }
 
 .price {
-  color: #00a878;
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 700;
+  color: #2c3e50;
+  font-size: 1.1rem;
 }
 
-/* Why Book a Referee Section */
-.why-referee-section {
-  margin-top: 5rem;
-  padding: 5rem 10%;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+.contact-btn {
+  background-color: #00a878;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.why-referee-section h2 {
-  font-size: 2.2rem;
-  margin-bottom: 1.5rem;
-  color: #1a1a1a;
-}
-
-.why-referee-section p {
-  color: #666;
-  max-width: 800px;
-  margin: 0 auto 3.5rem;
-  line-height: 1.6;
-}
-
-.benefits-grid {
-  display: flex;
-  justify-content: space-around;
-  gap: 30px;
-}
-
-.benefit-item {
-  flex: 1;
-  text-align: center;
-}
-
-.benefit-icon {
-  font-size: 2rem;
-  display: inline-block;
-  padding: 15px;
-  background: #f0fcf9;
-  border-radius: 50%;
-  margin-bottom: 1.5rem;
-}
-
-.benefit-item h4 {
-  font-size: 1.2rem;
-  margin-bottom: 0.75rem;
-  color: #1a1a1a;
-}
-
-.benefit-item p {
-  color: #777;
-  font-size: 0.9rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .benefits-grid {
-    flex-direction: column;
-    gap: 40px;
-  }
+.contact-btn:hover {
+  background-color: #008f66;
 }

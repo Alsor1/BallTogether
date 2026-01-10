@@ -1,12 +1,8 @@
 package com.balltogether.backend.controller;
 
 import com.balltogether.backend.dto.BookingRequest;
-import com.balltogether.backend.entity.Event;
-import com.balltogether.backend.entity.Location;
-import com.balltogether.backend.entity.Users;
-import com.balltogether.backend.repository.EventRepository;
-import com.balltogether.backend.repository.LocationRepository;
-import com.balltogether.backend.repository.UserRepository;
+import com.balltogether.backend.entity.*;
+import com.balltogether.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +17,11 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class BookingController {
 
-    @Autowired
-    private EventRepository eventRepository;
-    
-    @Autowired
-    private LocationRepository locationRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private EventRepository eventRepository;
+    @Autowired private LocationRepository locationRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private RefereeRepository refereeRepository; // <--- INJECTARE NOUĂ
+    // @Autowired private SportRepository sportRepository; // Decomentează dacă ai SportRepository
 
     @GetMapping("/occupied/{locationId}")
     public ResponseEntity<List<Event>> getOccupiedSlots(@PathVariable Long locationId) {
@@ -38,15 +31,22 @@ public class BookingController {
     @PostMapping("/confirm")
     public ResponseEntity<?> createBooking(@RequestBody BookingRequest request) {
         try {
+            System.out.println("=== BOOKING REQUEST ===");
+            System.out.println("UserId: " + request.getUserId());
+            System.out.println("LocationId: " + request.getLocationId());
+            System.out.println("RefereeId: " + request.getRefereeId());
+            System.out.println("=======================");
+            
             LocalDateTime start = LocalDateTime.parse(request.getStartTime());
             LocalDateTime end = LocalDateTime.parse(request.getEndTime());
 
+            // 1. Verificare Suprapunere
             boolean isOccupied = eventRepository.existsOverlappingEvent(request.getLocationId(), start, end);
             if (isOccupied) {
                 return ResponseEntity.badRequest().body("Selected time slot is already booked.");
             }
 
-            // Create event using JPA (not native query)
+            // 2. Creare Eveniment
             Event event = new Event();
             
             Users host = userRepository.findById(request.getUserId())
@@ -56,12 +56,29 @@ public class BookingController {
             Location location = locationRepository.findById(request.getLocationId())
                     .orElseThrow(() -> new RuntimeException("Location not found"));
             event.setLocation(location);
+
+            // Setare Sport (Dacă ai SportRepository, caută-l după ID)
+            // Sport sport = sportRepository.findById(request.getSportId()).orElse(null);
+            // event.setSport(sport);
+
+            // --- LOGICĂ NOUĂ: Setare Arbitru ---
+            if (request.getRefereeId() != null) {
+                // Verifică dacă arbitrul este disponibil în intervalul selectat
+                boolean refereeIsBusy = eventRepository.existsOverlappingEventForReferee(
+                        request.getRefereeId(), start, end);
+                if (refereeIsBusy) {
+                    return ResponseEntity.badRequest().body("Selected referee is not available during this time slot.");
+                }
+                
+                Referee referee = refereeRepository.findById(request.getRefereeId())
+                        .orElseThrow(() -> new RuntimeException("Referee not found"));
+                event.setReferee(referee);
+            }
             
             event.setStartTime(start);
             event.setEndTime(end);
             event.setStatus("PLANNED");
             
-            // Use JPA save() - this will properly create the event and return the ID
             Event savedEvent = eventRepository.save(event);
             
             Map<String, Object> response = new HashMap<>();

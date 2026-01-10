@@ -31,6 +31,7 @@ interface FieldData {
   longitude: number;   // <--- NUME CORECTAT (era lng)
   imageUrl: string;
   type?: string;       // Opțional, în caz că lipsește
+  sports?: { id: number; name: string }[]; // Sporturile disponibile
 }
 
 const FieldsPage: React.FC = () => {

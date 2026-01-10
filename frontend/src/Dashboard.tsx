@@ -24,6 +24,16 @@ interface Event {
   endTime: string;
   status: string;
   participants?: any[];
+  referee?: {
+    id: number;
+    bio: string;
+    ratePerHour: number;
+    user: {
+      id: number;
+      email: string;
+      fullName: string;
+    };
+  } | null;
 }
 
 const Dashboard: React.FC = () => {
@@ -107,6 +117,11 @@ const Dashboard: React.FC = () => {
     return false;
   };
 
+  const isReferee = (event: Event) => {
+    if (userId && event.referee?.user) return event.referee.user.id === parseInt(userId);
+    return false;
+  };
+
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
@@ -128,7 +143,7 @@ const Dashboard: React.FC = () => {
           {events.map((event) => (
             <div 
               key={event.id} 
-              className="event-card"
+              className={`event-card ${isReferee(event) ? 'referee-card' : ''}`}
               data-sport={event.sport?.name || 'Generic'}
             >
               
@@ -155,7 +170,9 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 <div className="role-indicator">
-                   {isHost(event) ? (
+                   {isReferee(event) ? (
+                      <span className="role-tag referee">🏁 You are the Referee</span>
+                   ) : isHost(event) ? (
                       <span className="role-tag host">👑 You are Hosting</span>
                    ) : (
                       <span className="role-tag participant">👤 You are Playing</span>
@@ -164,6 +181,16 @@ const Dashboard: React.FC = () => {
                       👥 {event.participants ? event.participants.length + 1 : 1} Players
                    </span>
                 </div>
+
+                {/* Referee Info Section - afișează arbitrul dacă există */}
+                {event.referee && (
+                  <div className="referee-info">
+                    <span className="referee-label">🏁 Referee:</span>
+                    <span className="referee-name">
+                      {event.referee.user?.fullName || event.referee.bio || 'Assigned'}
+                    </span>
+                  </div>
+                )}
                 
                 {/* Debug: Show event ID */}
                 <div className="event-id-debug" style={{fontSize: '0.75rem', color: '#888', marginTop: '0.5rem'}}>

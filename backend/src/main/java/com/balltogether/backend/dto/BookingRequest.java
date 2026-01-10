@@ -4,6 +4,7 @@ public class BookingRequest {
     private Long userId;
     private Long locationId;
     private Long sportId;
+    private Long refereeId;
     private String startTime;
     private String endTime;
 
@@ -46,5 +47,13 @@ public class BookingRequest {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Long getRefereeId() {
+        return refereeId;
+    }
+
+    public void setRefereeId(Long refereeId) {
+        this.refereeId = refereeId;
     }
 }

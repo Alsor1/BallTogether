@@ -13,10 +13,10 @@ import java.util.List;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    // Cerinta: Accesul la baza de date prin SQL manual
-    @Query(value = "SELECT * FROM locations", nativeQuery = true)
+    // Folosim JPQL pentru a încărca și relațiile (sports)
+    @Query("SELECT DISTINCT l FROM Location l LEFT JOIN FETCH l.sports")
     List<Location> findAllLocationsNative();
     
-    @Query(value = "SELECT * FROM locations WHERE location_id = :id", nativeQuery = true)
+    @Query("SELECT l FROM Location l LEFT JOIN FETCH l.sports WHERE l.id = :id")
     java.util.Optional<Location> findByIdNative(@Param("id") Long id);
 }

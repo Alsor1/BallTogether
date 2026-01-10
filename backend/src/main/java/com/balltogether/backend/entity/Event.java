@@ -43,6 +43,11 @@ public class Event {
     @Column(name = "status")
     private String status;
 
+    // --- CÂMP NOU: Arbitrul ---
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "referee_id")
+    private Referee referee;
+
     // Default constructor
     public Event() {}
 
@@ -79,6 +84,11 @@ public class Event {
         return status;
     }
 
+    // --- Getter pentru Referee ---
+    public Referee getReferee() {
+        return referee;
+    }
+
     // Setters
     public void setId(Long id) {
         this.id = id;
@@ -110,5 +120,10 @@ public class Event {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    // --- Setter pentru Referee ---
+    public void setReferee(Referee referee) {
+        this.referee = referee;
     }
 }

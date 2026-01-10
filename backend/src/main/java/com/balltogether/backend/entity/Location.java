@@ -6,6 +6,8 @@ package com.balltogether.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "locations")
@@ -30,4 +32,13 @@ public class Location {
     
     @Column(name = "image_url")
     private String imageUrl;
+
+    // --- RELAȚIE NOUĂ: Sporturile disponibile pe acest teren ---
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "location_sports",
+        joinColumns = @JoinColumn(name = "location_id"),
+        inverseJoinColumns = @JoinColumn(name = "sport_id")
+    )
+    private Set<Sport> sports = new HashSet<>();
 }

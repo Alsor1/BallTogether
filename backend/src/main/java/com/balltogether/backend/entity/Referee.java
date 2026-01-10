@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
-import com.balltogether.backend.entity.Users;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "referees")
@@ -16,7 +17,7 @@ public class Referee {
     @Column(name = "referee_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users user;
 
@@ -24,4 +25,16 @@ public class Referee {
 
     @Column(name = "rate_per_hour")
     private BigDecimal ratePerHour;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    // --- RELAȚIA NOUĂ (Conform diagramei Referee_Sports) ---
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "referee_sports",
+        joinColumns = @JoinColumn(name = "referee_id"),
+        inverseJoinColumns = @JoinColumn(name = "sport_id")
+    )
+    private Set<Sport> sports = new HashSet<>();
 }

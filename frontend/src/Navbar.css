@@ -55,3 +55,26 @@
   text-decoration: none;
   font-weight: bold;
 }
+
+.admin-link {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white !important;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.admin-link:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.logout-btn {
+  border: none;
+  cursor: pointer;
+  background: #f44336;
+}
+
+.logout-btn:hover {
+  background: #d32f2f;
+}

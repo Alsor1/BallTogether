@@ -12,6 +12,7 @@ import Footer from './Footer';
 import FieldsPage from './FieldPage'; // Asigură-te că numele fișierului este corect (FieldPage vs FieldsPage)
 import BookingPage from './BookingPage';
 import RefereesPage from './RefereesPage';
+import AdminPage from './AdminPage';
 import './App.css';
 
 const App: React.FC = () => {
@@ -34,6 +35,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/referees" element={<RefereesPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
 

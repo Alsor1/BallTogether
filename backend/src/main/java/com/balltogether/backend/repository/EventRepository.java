@@ -30,11 +30,18 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e WHERE e.host.email = :email")
     List<Event> findByHostEmailNative(@Param("email") String email);
 
-    // --- QUERY NOU: Evenimente unde ești Gazdă SAU Participant ---
+    // --- QUERY NOU: Evenimente unde ești Gazdă SAU Participant SAU Arbitru ---
     @Query("SELECT DISTINCT e FROM Event e " +
            "LEFT JOIN FETCH e.participants p " +
-           "WHERE e.host.id = :userId OR :userId IN (SELECT p.id FROM e.participants p)")
+           "LEFT JOIN FETCH e.referee r " +
+           "WHERE e.host.id = :userId " +
+           "OR :userId IN (SELECT p.id FROM e.participants p) " +
+           "OR (e.referee IS NOT NULL AND e.referee.user.id = :userId)")
     List<Event> findAllRelatedToUser(@Param("userId") Long userId);
+
+    // --- QUERY NOU: Evenimente unde ești Arbitru ---
+    @Query("SELECT e FROM Event e WHERE e.referee.user.id = :userId")
+    List<Event> findByRefereeUserId(@Param("userId") Long userId);
 
     // Insert event - PostgreSQL compatible
     @Modifying
@@ -65,6 +72,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e WHERE e.location.id = :locationId AND e.endTime > CURRENT_TIMESTAMP")
     List<Event> findFutureEventsByLocation(@Param("locationId") Long locationId);
 
+    // Find events by location ID (for admin location deletion check)
+    @Query("SELECT e FROM Event e WHERE e.location.id = :locationId")
+    List<Event> findByLocationId(@Param("locationId") Long locationId);
+
     // Overloaded method with custom time parameter
     @Query("SELECT e FROM Event e WHERE e.location.id = :locationId AND e.endTime > :now")
     List<Event> findFutureEventsByLocation(@Param("locationId") Long locationId, @Param("now") LocalDateTime now);
@@ -75,5 +86,20 @@ public interface EventRepository extends JpaRepository<Event, Long> {
            "AND ((:startTime < e.endTime) AND (:endTime > e.startTime))")
     boolean existsOverlappingEvent(@Param("locationId") Long locationId,
                                    @Param("startTime") LocalDateTime startTime,
+                                   @Param("endTime") LocalDateTime endTime);
+
+    // --- QUERY NOU: Verifică dacă arbitrul are evenimente suprapuse ---
+    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END FROM Event e " +
+           "WHERE e.referee.id = :refereeId " +
+           "AND ((:startTime < e.endTime) AND (:endTime > e.startTime))")
+    boolean existsOverlappingEventForReferee(@Param("refereeId") Long refereeId,
+                                              @Param("startTime") LocalDateTime startTime,
+                                              @Param("endTime") LocalDateTime endTime);
+
+    // --- QUERY NOU: Găsește arbitrii ocupați într-un interval de timp ---
+    @Query("SELECT DISTINCT e.referee.id FROM Event e " +
+           "WHERE e.referee IS NOT NULL " +
+           "AND ((:startTime < e.endTime) AND (:endTime > e.startTime))")
+    List<Long> findBusyRefereeIds(@Param("startTime") LocalDateTime startTime,
                                    @Param("endTime") LocalDateTime endTime);
 }

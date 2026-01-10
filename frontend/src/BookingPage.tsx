@@ -1,5 +1,5 @@
-/** BookingPage.tsx - Import corectat pentru structura ta de fișiere
- * @version 09 Ianuarie 2026
+/** BookingPage.tsx - Cu Selectare Arbitru
+ * @version 10 Ianuarie 2026
  */
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -11,12 +11,22 @@ interface LocationData {
   address: string;
   price: number;
   imageUrl: string;
+  sports?: { id: number; name: string }[];
 }
 
 interface OccupiedSlot {
   id: number;
   startTime: string;
   endTime: string;
+}
+
+// Interfață nouă pentru Arbitru (bazată pe DTO-ul creat anterior)
+interface Referee {
+  id: number;
+  name: string;
+  price: number; // ratePerHour
+  imageUrl: string;
+  sports: string[];
 }
 
 const BookingPage: React.FC = () => {
@@ -26,13 +36,18 @@ const BookingPage: React.FC = () => {
   const [location, setLocation] = useState<LocationData | null>(null);
   const [occupiedSlots, setOccupiedSlots] = useState<OccupiedSlot[]>([]);
   
+  // State-uri noi pentru Arbitri
+  const [referees, setReferees] = useState<Referee[]>([]);
+  const [selectedRefereeId, setSelectedRefereeId] = useState<number | null>(null);
+  
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [selectedSport, setSelectedSport] = useState('Soccer');
+  const [selectedSport, setSelectedSport] = useState<string>('');
   const [totalPrice, setTotalPrice] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
+  const [loadingReferees, setLoadingReferees] = useState(false);
 
-  // 1. Fetch Location Details & Occupied Slots
+  // 1. Fetch Data (Locație, Sloturi Ocupate)
   useEffect(() => {
     const fetchData = async () => {
       if (!id) return;
@@ -41,16 +56,19 @@ const BookingPage: React.FC = () => {
         const locRes = await fetch(`http://localhost:8080/api/locations/${id}`);
         if (locRes.ok) {
           const data = await locRes.json();
-          // Fallback mapare pret daca vine ca price_per_hour
           setLocation({ ...data, price: data.price || data.price_per_hour });
+          // Setare sport implicit din sporturile disponibile
+          if (data.sports && data.sports.length > 0) {
+            setSelectedSport(data.sports[0].name);
+          }
         }
 
         // Fetch Occupied Slots
         const slotsRes = await fetch(`http://localhost:8080/api/bookings/occupied/${id}`);
         if (slotsRes.ok) {
-          const slots = await slotsRes.json();
-          setOccupiedSlots(slots);
+          setOccupiedSlots(await slotsRes.json());
         }
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -58,7 +76,42 @@ const BookingPage: React.FC = () => {
     fetchData();
   }, [id]);
 
-  // 2. Calcul Preț & Validare Suprapunere
+  // 2. Fetch arbitri disponibili când se schimbă intervalul de timp
+  useEffect(() => {
+    const fetchAvailableReferees = async () => {
+      if (!startTime || !endTime) {
+        setReferees([]);
+        return;
+      }
+
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+      
+      if (end <= start) {
+        setReferees([]);
+        return;
+      }
+
+      setLoadingReferees(true);
+      try {
+        const refRes = await fetch(
+          `http://localhost:8080/api/referees/available?startTime=${startTime}&endTime=${endTime}`
+        );
+        if (refRes.ok) {
+          setReferees(await refRes.json());
+          setSelectedRefereeId(null); // Reset arbitru la schimbare de timp
+        }
+      } catch (error) {
+        console.error("Error fetching available referees:", error);
+      } finally {
+        setLoadingReferees(false);
+      }
+    };
+    
+    fetchAvailableReferees();
+  }, [startTime, endTime]);
+
+  // 3. Calcul Preț (Include și Arbitrul)
   useEffect(() => {
     setErrorMsg('');
     setTotalPrice(0);
@@ -72,7 +125,6 @@ const BookingPage: React.FC = () => {
         return;
       }
 
-      // Verificăm dacă există suprapunere cu sloturile ocupate
       const hasOverlap = occupiedSlots.some(slot => {
         const slotStart = new Date(slot.startTime);
         const slotEnd = new Date(slot.endTime);
@@ -85,27 +137,36 @@ const BookingPage: React.FC = () => {
       }
 
       const diffHours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-      setTotalPrice(diffHours * location.price);
+      
+      // Calculăm costul arbitrului (dacă e selectat)
+      let refereeCostPerHour = 0;
+      if (selectedRefereeId) {
+        const referee = referees.find(r => r.id === selectedRefereeId);
+        if (referee) refereeCostPerHour = referee.price;
+      }
+
+      // Preț total = (Preț Teren + Preț Arbitru) * Ore
+      const totalHourlyRate = location.price + refereeCostPerHour;
+      setTotalPrice(diffHours * totalHourlyRate);
     }
-  }, [startTime, endTime, location, occupiedSlots]);
+  }, [startTime, endTime, location, occupiedSlots, selectedRefereeId, referees]);
 
   // 3. Confirm Booking
   const handleConfirmBooking = async () => {
     if (errorMsg) return;
 
+    // Logica de User ID (păstrată din codul tău)
     let userId: number | null = null;
     const storedId = localStorage.getItem('userId');
-    
     if (storedId) {
       userId = parseInt(storedId);
     } else {
-      // Fallback: încercăm să parsam obiectul user întreg
       const userStr = localStorage.getItem('user'); 
       if (userStr) {
           try {
               const userObj = JSON.parse(userStr);
               userId = userObj.id || userObj.userId;
-          } catch (e) { console.error("Error parsing user JSON", e); }
+          } catch (e) { }
       }
     }
 
@@ -123,9 +184,10 @@ const BookingPage: React.FC = () => {
       userId: userId,
       locationId: location?.id,
       sportId: sportIdMap[selectedSport] || 1,
+      refereeId: selectedRefereeId, // <--- Trimitem ID-ul arbitrului (poate fi null)
       startTime: startTime,
       endTime: endTime,
-      totalAmount: totalPrice
+      // Backend-ul nu folosește totalAmount din frontend pentru validare, dar e bine să-l trimitem dacă e nevoie
     };
 
     try {
@@ -150,8 +212,11 @@ const BookingPage: React.FC = () => {
 
   if (!location) return <div className="loading">Loading location...</div>;
 
+  // Găsim arbitrul selectat pentru a-i afișa prețul în sumar
+  const selectedReferee = referees.find(r => r.id === selectedRefereeId);
+
   return (
-    <> 
+    <>
     <div className="booking-container">
       <div className="booking-content">
         <section className="booking-form-section">
@@ -171,19 +236,28 @@ const BookingPage: React.FC = () => {
             </div>
           )}
 
+          {/* Selecție Sport - doar sporturile disponibile pe acest teren */}
           <div className="form-group">
             <label>Sport</label>
-            <select 
-              value={selectedSport} 
-              onChange={(e) => setSelectedSport(e.target.value)}
-              className="input-field"
-            >
-              <option value="Soccer">Soccer</option>
-              <option value="Basketball">Basketball</option>
-              <option value="Tennis">Tennis</option>
-            </select>
+            {location.sports && location.sports.length > 0 ? (
+              <select 
+                value={selectedSport} 
+                onChange={(e) => {
+                  setSelectedSport(e.target.value);
+                  setSelectedRefereeId(null); // Resetează arbitrul când se schimbă sportul
+                }}
+                className="input-field"
+              >
+                {location.sports.map((sport) => (
+                  <option key={sport.id} value={sport.name}>{sport.name}</option>
+                ))}
+              </select>
+            ) : (
+              <p className="no-sports-warning">⚠️ No sports configured for this location</p>
+            )}
           </div>
 
+          {/* Selecție Timp - MUTAT ÎNAINTE DE ARBITRU */}
           <div className="form-row">
             <div className="form-group">
               <label>Start Time</label>
@@ -207,6 +281,38 @@ const BookingPage: React.FC = () => {
           
           {errorMsg && <p className="error-message">{errorMsg}</p>}
 
+          {/* Selecție Arbitru - filtrat după sport ȘI disponibilitate în timp */}
+          <div className="form-group">
+            <label>Hire a Referee (Optional)</label>
+            {!startTime || !endTime ? (
+              <p className="hint-text" style={{color: '#888'}}>⏰ Please select a time slot first to see available referees</p>
+            ) : loadingReferees ? (
+              <p className="hint-text">Loading available referees...</p>
+            ) : (
+              <>
+                <select 
+                  value={selectedRefereeId || ''} 
+                  onChange={(e) => setSelectedRefereeId(e.target.value ? parseInt(e.target.value) : null)}
+                  className="input-field"
+                  style={{ borderColor: selectedRefereeId ? '#00a878' : '#ddd' }}
+                >
+                  <option value="">No Referee</option>
+                  {referees
+                    .filter(ref => !selectedSport || ref.sports?.includes(selectedSport))
+                    .map(ref => (
+                      <option key={ref.id} value={ref.id}>
+                        {ref.name} (+${ref.price}/hr) - {ref.sports?.join(', ') || 'General'}
+                      </option>
+                    ))}
+                </select>
+                {selectedRefereeId && <p className="hint-text">✨ Professional referee selected!</p>}
+                {selectedSport && referees.filter(ref => ref.sports?.includes(selectedSport)).length === 0 && (
+                  <p className="hint-text" style={{color: '#888'}}>No referees available for {selectedSport} at this time</p>
+                )}
+              </>
+            )}
+          </div>
+
           <div className="payment-method">
             <h3>Payment Method (Placeholder)</h3>
             <div className="card-placeholder">
@@ -228,13 +334,25 @@ const BookingPage: React.FC = () => {
               <div className="divider"></div>
               
               <div className="price-row">
-                <span>Hourly Rate</span>
+                <span>Field Rate</span>
                 <span>${location.price} / hr</span>
               </div>
+              
+              {/* Afișare cost arbitru în sumar */}
+              {selectedReferee && (
+                <div className="price-row highlight">
+                  <span>Referee ({selectedReferee.name})</span>
+                  <span>+${selectedReferee.price} / hr</span>
+                </div>
+              )}
+
               <div className="price-row">
                 <span>Duration</span>
-                <span>{totalPrice > 0 ? (totalPrice / location.price).toFixed(1) : 0} hrs</span>
+                <span>{startTime && endTime && !errorMsg ? ((new Date(endTime).getTime() - new Date(startTime).getTime()) / 3600000).toFixed(1) : 0} hrs</span>
               </div>
+              
+              <div className="divider"></div>
+              
               <div className="price-row total">
                 <span>Total Amount</span>
                 <span>${totalPrice.toFixed(2)}</span>

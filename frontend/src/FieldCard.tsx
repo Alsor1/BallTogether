@@ -14,9 +14,10 @@ interface FieldProps {
   players: number;
   type: string;
   imageUrl: string; // Dynamic image from DB
+  sports?: { id: number; name: string }[]; // Sporturile disponibile
 }
 
-const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, type, imageUrl }) => {
+const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, type, imageUrl, sports }) => {
   const navigate = useNavigate();
 
   return (
@@ -37,6 +38,15 @@ const FieldCard: React.FC<FieldProps> = ({ id, name, address, price, players, ty
       <div className="card-info">
         <h3>{name}</h3>
         <p className="address">📍 {address}</p>
+        
+        {/* Afișare sporturi disponibile */}
+        {sports && sports.length > 0 && (
+          <div className="sports-tags">
+            {sports.map((sport) => (
+              <span key={sport.id} className="sport-tag-field">{sport.name}</span>
+            ))}
+          </div>
+        )}
         
         <div className="card-footer-info">
           <span className="price"><strong>$</strong> {price}/hr</span>
