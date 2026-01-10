@@ -7,7 +7,7 @@
 | **Nume Proiect** | BallTogether - Frontend |
 | **Versiune** | 0.1.0 |
 | **Tehnologie** | React 19.2.0 cu TypeScript |
-| **Autor** | [Nume Student] |
+| **Autor** | Avram Sorin-Alexandru |
 | **Data** | Ianuarie 2026 |
 
 ---
@@ -595,8 +595,3 @@ Frontend-ul BallTogether este o aplicatie React moderna care ofera:
 - **Panou de administrare** pentru gestionarea entitatilor
 - **Design responsiv** adaptat pentru dispozitive mobile
 - **Integrare completa** cu backend-ul Spring Boot via REST API
-
----
-
-**Document generat:** Ianuarie 2026  
-**Versiune Frontend:** 0.1.0

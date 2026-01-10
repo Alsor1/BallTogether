@@ -1046,9 +1046,3 @@ target/
 | AdminController | `/api/admin` | Operatiuni administrative complete |
 
 ### Total: 26 Endpoint-uri REST API
-
----
-
-**Document generat:** Decembrie 2025  
-**Versiune:** 1.0  
-**Autor:** Documentatie automata generata
